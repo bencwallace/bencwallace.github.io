@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Public Repositories</title>
+  <title>Code</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -28,7 +28,6 @@
 
 <div class="jumbotron text-center" style="margin-bottom:0">
   <h1>Benjamin Wallace</h1>
-  <p>Public Repositories</p>
 </div>
 
 <div id="navbar-include"></div>
@@ -38,19 +37,16 @@
 
 <div class="container" style="margin-top:30px">
   <div class="row">
-    <div class="col-sm-4" id="sidebar-include"></div>
-    <script>
-      $("#sidebar-include").load("sidebar.html");
-    </script>
+    <div class="col-md-12">
+      <h1>code</h1><hr>
 
-    <div class="col-sm-8">
-      <h1>public repositories</h1><hr>
+      <p>Here are some projects I've worked on in my spare time.</p>
 
       <div class="card mb-md-5">
         <div class="card-header">Probly</div>
         <div class="card-body">
-          <p class="card-text">Probly is a Python package for the simple and intuitive manipulaton of random variables.</p>
-          <p class="card-text">Probly shifts the emphasis in computational statistics from probability distributions—typically implemented as functions that can be called on to produce a concrete sample—to random variables—objects that represent the potential outcome of a sampling procedure and that can be manipulated in the same ways as these outcomes. Typically, this means that random variables are subject to the usual laws of arithmetic. This is accounted for by Probly, which approaches computational statistics from the point of view of symbolic computation.</p>
+          <p class="card-text">Probly is a Python package for the simple and intuitive manipulaton of random variables.<br /><br />
+          Probly shifts the emphasis in computational statistics from probability distributions—typically implemented as functions that can be called on to produce a concrete sample—to random variables—objects that represent the potential outcome of a sampling procedure and that can be manipulated in the same ways as these outcomes. Typically, this means that random variables are subject to the usual laws of arithmetic. This is accounted for by Probly, which approaches computational statistics from the point of view of symbolic computation.</p>
         </div>
         <div class="card-footer">
           <a class="btn btn-outline-primary" href="https://github.com/bencwallace/probly">GitHub</a>
@@ -67,6 +63,18 @@
         </div>
         <div class="card-footer">
           <a class="btn btn-outline-primary" href="https://github.com/bencwallace/Polymers.jl">GitHub</a>
+        </div>
+      </div>
+
+      <div class="card mb-md-5">
+        <div class="card-header">slox</div>
+        <div class="card-body">
+          <p class="card-text">
+            A Scala port of jlox, the Java implementation of a tree-walk interpreter for the Lox language, from the excellent online book Crafting Interpreters by Bob Nystrom.
+          </p>
+        </div>
+        <div class="card-footer">
+          <a class="btn btn-outline-primary" href="https://github.com/bencwallace/slox">GitHub</a>
         </div>
       </div>
 
