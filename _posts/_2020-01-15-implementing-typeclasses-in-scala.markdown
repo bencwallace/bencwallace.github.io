@@ -1,97 +1,76 @@
 ---
 layout: post
-title:  "Implementing typeclasses in Scala"
+title:  "Implementing type classes in Scala I"
 date:   2020-01-15 00:37:44 +0100
-categories: scala typeclasses
+categories: scala type classes
 ---
 
-I've been learning Scala recently and have been very impressed with some of its
-powerful features as well as the way in which it seamlessly combines object-oriented
-and functional programming. Nevertheless, I've found some of these features a bit
-tricky and learning resources relatively hard to find. Knowing some Haskell, a
-natural question I had was: where are all the typeclasses? It turns out that, unlike
-in Haskell, typeclasses are not built-in to the language; rather, they can be *implemented*
-using Scala "implicits". Moreover, due to Scala's object-oriented nature, typeclasses can
-inherit from one another and instances of typeclasses are themselves objects.
+I've been learning Scala recently and have been very impressed with the power of some of
+its features as well as the way in which it seamlessly combines object-oriented
+and functional programming. Nevertheless, some of these features can seem a bit
+tricky and learning resources can be relatively hard to find. In particular, I had some
+difficulty wrapping my head around *implicits*. Things came together when I began to
+ask myself: what are the analogs of Haskell's type classes in Scala?
+
+It turns out that, unlike
+in Haskell, type classes are not built-in to the language; rather, they can be *implemented*
+using implicits. Because of this, they're actually more powerful than in Haskell: you can,
+for example, creating multiple coexisting type class instances and pass them around as objects.
+Moreover, due to Scala's object-oriented nature, type classes can be made to
+inherit from one another.
 
 Note that there are already exist some Scala libraries, such as
-[Scalaz](https://github.com/scalaz/scalaz) that develop many useful typeclasses in this way,
-but for the purpos of understanding how this is done, I think it's best to start from scratch.
+[Scalaz](https://github.com/scalaz/scalaz) that develop many useful type classes,
+but for the purpose of understanding how this is done, I think it's best to start from scratch.
 
-# Roadmap
+**Prerequisites.** I will make use of some basic Scala features. Implicits are the only feature
+I'll really explain. Most of the others are similar to ones found in Java (traits are like
+interfaces, objects replace the `static` keyword). I do use options and some pattern matching,
+which will be familiar if you've used a language in ML family (like Haskell) before. In the later
+posts I'll implement functors and monads, but these won't be discussed in this post.
 
-I'll start by recalling the notion of a typeclass, then discuss Scala implicits and show some
-of Haskell's most common typeclasses (`Show`, `Functor`, and `Monad`) can be implemented with
-them. Of course, I'll also show how to make instances of typeclasses, starting with instantiation
-of ordinary types (`Int` as an instance of `Show`), then adding type constraints or context bounds
-(`Option` as an instance of `Show`), and finally instantiating type constructors (`Option` as an
-instance of `Functor` and `Monad`).
+**Warning.** As I said above I'm still learning Scala and I may do things in slightly non-idiomatic
+ways at times. I'm also not an expert on programming languages. If you find anything wrong or that
+could be improved in this post, please let me know.
 
-This turns out to be a great way to discuss how a number of interesting Scala features and programming
-language concepts come together, including: parametric and ad hoc polymorphism, context bounds, and Scala
-`for` comprehensions.
+## Roadmap
 
-I'll frequently make comparisons to Haskell but knowing Haskell (hopefully) shouldn't be
-strictly necessary.
+In this post, I'll start by discussing type classes and implicits, then I'll show how to implement the
+`Show` type class in Scala. Of course, I'll also show how to make instances of type classes, starting with
+instantiation of ordinary types like `Int` and `String`. In later posts, I'll add type constraints
+(`Option` as an instance of `Show`) and show how to implement type classes for type constructors (`Option`
+as an instance of `Functor` and `Monad`). Along the way, we'll see how a number of interesting Scala features
+and programming language concepts come together, including: parametric and ad hoc polymorphism, context bounds,
+and Scala `for` comprehensions.
 
-# Why typeclasses?
 
-Rather than giving a general explanation of typeclasses are, I'll try to explain some of the basic
-ideas in the examples that follow. Much better introductions to typeclasses than I could write,
-can easily be found online. All I'll say here is that typeclasses are "like (Java) interfaces"
+## Why type classes?
+
+Rather than giving a general explanation of what type classes are, I'll try to explain some of the basic
+ideas in the examples that follow. Much better introductions to type classes than I could write,
+can easily be found online. All I'll say here is that type classes are "like (Java) interfaces"
 but much more general and powerful. In particular, we'll see the following examples of what
-typeclasses can do that interfaces can't:
+type classes can do that interfaces can't:
 
-1. types can be made instances of type classes outside of their own definitions; this means, for
-  example, that we can instantiate typeclass instances for built-in types;
-2. typeclass instantiation of parameterized types can be specialized depending on the type parameter; and
-3. so-called "higher-kinded" types can be made instances of typeclasses.
+1. Types can be made instances of type classes outside of their own definitions; this means, for
+  example, that we can instantiate type class instances for built-in types.
+2. Type class instantiation of parameterized types can be specialized depending on the type parameter.
+3. So-called "higher-kinded" types can be made instances of type classes.
 
-# Scala implicits
+## Scala implicits
 
-This is one of those topics I've personally found pretty tricky. However, they are extremely powerful.
 Implicits obviate the need to (explicitly) cast or convert objects from one type to another. In fact,
-this is how Scala deals with different number types: when you pass, say, an `Int` to a function of a
+this is how Scala deals with different numerical types: when you pass, say, an `Int` to a function of a
 `Double`, [Scala](https://github.com/scala/scala/blob/v2.11.8/src/library/scala/Int.scala#L474) performs
 an implicit conversion (this is necessary because `Int` is not a subtype of `Double`).
 
-There are several ways to define implicit conversions. Here's one way to do it.
+There are several ways to define implicit conversions. Rather than provide an exhaustive explanation,
+I'll sprinkle these throughout the post. Here's one way to do it.
 
-***Implicit conversion I.*** Define an `implicit` value containing a function literal performing the implicit
-conversion.
+***Implicit conversion I.*** Define an `implicit` function or method that performs the implicit conversion
 
-For instance, we could do the following
-if we wanted to pass any **integer** to any function of an `Option` and have that value `x` automatically converted
-to `Some(x)` if necessary.
-
-{% highlight scala %}
-implicit val int2option: Int => Option[Int] = x => Some(x)
-
-def f(option: Option[Int]): Unit = option match {
-  case None => println("None")
-  case Some(x) => println(x)
-}
-{% endhighlight %}
-
-
-Now (as long as `int2option` is in scope) we can call, for example `f(10)`, which will print `10` to the screen.
-When the compiler encounters our function call, it notices that `10` is not of the right type to be passed to
-`f`. In most statically-typed languages, this would immediately lead to a compilation error. The Scala compiler,
-however, searches within the "implicit scope" for an implicit conversion; in this case, it finds `int2option`,
-which can convert an `Int` to an `Option[Int]`, which *is* of the right type to be passed to `f`.
-The compiler then essentially replaces our ordinary function call `f(10)` by `f(int2option(x))`.
-
-Note that if we called `f(Some(10))`, the compiler would *still* print `10` to the screen (rather than `Some(10)`)
-because an implicit conversion is not necessary (hence not used) in this case.
-
-What if we wanted this to work with **any value** rather than just integers. We could replace `Int` by `Any` above,
-but then an integer would be implicitly converted to `Option[Any]` rather than `Option[Int]`. We need to make the
-implicit conversion generic. We can't make values generic, but we can just declare the implicit conversion using a
-`def` (which can be made generic) instead.
-
-***Implicit conversion II.*** Define an `implicit` function or method that performs the implicit conversion
-
-In the above example, here's what we'd do.
+Suppose we wanted to pass an ordinary (non-option) value `a` to a function of an option and have it automatically
+understood as `Some(a)`. Here's what we'd do.
 
 {% highlight scala %}
 implicit def any2option[A](x: A): Option[A] = Some(x)
@@ -102,13 +81,26 @@ def f[A](option: Option[A]): Unit = option match {
 }
 {% endhighlight %}
 
-# The `Show` typeclass
+Now (as long as `any2option` is in scope) we can call, for example `f(10)`, which will print "10" to the screen.
+When the compiler encounters our function call, it notices that `10` is not of the right type to be passed to
+`f`. In most statically-typed languages, this would immediately lead to a compilation error. The Scala compiler,
+however, searches within the "implicit scope" for an implicit conversion; in this case, it finds `any2option`,
+which can convert an `Int` to an `Option[Int]`, which *is* of the right type to be passed to `f`.
+The compiler then replaces our ordinary function call `f(10)` by `f(any2option(x))`.
 
-**Note.** The rest of this post closely follows [Type classes in Scala](https://scalac.io/typeclasses-in-scala/).
-I thought it would be best to write up many of the ideas there using my own notation, terminology, and project
-structure in order to better motivate and prepare you for the following posts.
+Note that if we called `f(Some(10))`, the compiler would *still* print "10" to the screen (rather than "Some(10)")
+because an implicit conversion is not necessary (hence not used) in this case.
 
-If you've used Haskell before, you're probably familiar with the `Show` typeclass. Any type `T` that is an instance
+**Terminology.** The fact that `any2option` works with parameters of any type is referred to as
+**parametric polymorphism**. This isn't especially relevant right now, but will be good to know later.
+
+## The `Show` type class
+
+**Note.** The rest of this post closely follows [Type classes in Scala](https://scalac.io/type classes-in-scala/).
+Rather than just linking to that article, I thought it would be best to write up many of the ideas there using my own notation,
+terminology, and project structure in order to better motivate and prepare you for the following posts.
+
+If you've used Haskell before, you're probably familiar with the `Show` type class. Any type `T` that is an instance
 of `Show` can be passed to the `show` function, which returns a string. In other words, `show` determines how members
 of a type should be displayed on the screen. In order to make a new class a member of `Show`, we need to define `show`
 for that type. Let's implement `Show` in Scala.
@@ -123,12 +115,12 @@ trait Show[A] {
 }
 {% endhighlight %}
 
-That's pretty simple. The `Show` typeclass is just a trait with a single method. In fact, all the typeclases we define
-will simply be traits. Now you might complain: *Traits are just Scala's versions of interfaces[^1]. So how is a typeclass
-different from an interface?* As you'll see, typeclasses are different in how we use them. Rather than extending them,
+That's pretty simple. The `Show` type class is just a trait with a single method. In fact, all the typeclases we define
+will simply be traits. Now you might complain: *Traits are just Scala's versions of interfaces[^1]. So how is a type class
+different from an interface?* As you'll see, type classes are different in how we use them. Rather than extending them,
 we'll implement them *implicitly*.
 
-# Instantiating typeclass members
+## Instantiating typeclass members
 
 Suppose we wanted to make `Int` a member of `Show`. Since `Int` is *already defined*, we can't simply throw
 in `extends Show` or `with Show` to the declaration of `Int`. Part of the power of of implicits and typeclasses is that
