@@ -5,7 +5,7 @@
 layout: default
 ---
 
-Hi, I'm Ben Wallace!
+**Hi, I'm Ben Wallace!**
 
 I'm a developer at [FLXFlight](https://www.flxflight.com/) in Vienna. These days, I'm really interested in scientific applications of computing, especially machine learning and data science, probabilistic programming, and computational statistics. I'm particularly interested in applications to these areas of tools and insights from more traditional areas of computing, such as functional programming, parallel programming, and concurrency.
 
