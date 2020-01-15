@@ -16,8 +16,6 @@
 title: Benjamin Wallace
 email: me [at] bcwallace [dot] com
 description: >- # this means to ignore newlines until "baseurl:"
-  # add description
-  # here
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://bcwallace.com" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  bencwallace
@@ -25,7 +23,7 @@ linkedin_username:  bencwallace
 
 # Build settings
 markdown: kramdown
-theme: jekyll-theme-minimal
+theme: minima
 plugins:
   - jekyll-feed
 
