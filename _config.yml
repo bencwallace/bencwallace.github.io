@@ -24,9 +24,12 @@ github: [metadata]
 
 # Build settings
 markdown: kramdown
-theme: jekyll-theme-midnight
+theme: minima
 plugins:
   - jekyll-feed
+github:
+  - owner_url: https://github.com/bencwallace
+show_downloads: false
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
