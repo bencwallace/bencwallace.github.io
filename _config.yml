@@ -20,10 +20,11 @@ baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://bcwallace.com" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  bencwallace
 linkedin_username:  bencwallace
+github: [metadata]
 
 # Build settings
 markdown: kramdown
-theme: minima
+theme: jekyll-theme-midnight
 plugins:
   - jekyll-feed
 
