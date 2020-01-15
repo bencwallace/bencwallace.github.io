@@ -23,7 +23,7 @@ linkedin_username:  bencwallace
 
 # Build settings
 markdown: kramdown
-theme: minima
+theme: jekyll-theme-midnight
 plugins:
   - jekyll-feed
 
