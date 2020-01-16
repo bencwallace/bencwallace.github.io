@@ -2,7 +2,7 @@
 layout: post
 title:  "Implementing type classes in Scala I"
 date:   2020-01-15 00:37:44 +0100
-categories: scala type classes
+categories: scala typeclasses polymorphism
 ---
 
 I've been learning Scala recently and have been very impressed with the power of some of
@@ -15,19 +15,19 @@ ask myself: what are the analogs of Haskell's type classes in Scala?
 It turns out that, unlike
 in Haskell, type classes are not built-in to the language; rather, they can be *implemented*
 using implicits. Because of this, they're actually more powerful than in Haskell: you can,
-for example, creating multiple coexisting type class instances and pass them around as objects.
-Moreover, due to Scala's object-oriented nature, type classes can be made to
+for example, create multiple coexisting type class instances and pass them around as objects.
+Moreover, due to Scala's object-oriented nature, type classes can
 inherit from one another.
 
-Note that there are already exist some Scala libraries, such as
-[Scalaz](https://github.com/scalaz/scalaz) that develop many useful type classes,
-but for the purpose of understanding how this is done, I think it's best to start from scratch.
+Note that there already exist some Scala libraries, such as
+[Scalaz](https://github.com/scalaz/scalaz), that develop many useful type classes,
+but for the purpose of understanding how this is done I think it's best to start from scratch.
 
 **Prerequisites.** I will make use of some basic Scala features. Implicits are the only feature
-I'll really explain. Most of the others are similar to ones found in Java (traits are like
-interfaces, objects replace the `static` keyword). I do use options and some pattern matching,
-which will be familiar if you've used a language in ML family (like Haskell) before. In the later
-posts I'll implement functors and monads, but these won't be discussed in this post.
+I'll really explain (I also briefly explain "options"). Most of the others are similar to ones found
+in Java (traits are like interfaces, objects replace the `static` keyword, pattern matching is somewhat
+like the `switch` statement). In the later posts I'll implement functors and monads, but these won't be
+discussed here.
 
 **Warning.** As I said above I'm still learning Scala and I may do things in slightly non-idiomatic
 ways at times. I'm also not an expert on programming languages. If you find anything wrong or that
@@ -35,27 +35,44 @@ could be improved in this post, please let me know.
 
 ## Roadmap
 
-In this post, I'll start by discussing type classes and implicits, then I'll show how to implement the
-`Show` type class in Scala. Of course, I'll also show how to make instances of type classes, starting with
-instantiation of ordinary types like `Int` and `String`. In later posts, I'll add type constraints
-(`Option` as an instance of `Show`) and show how to implement type classes for type constructors (`Option`
-as an instance of `Functor` and `Monad`). Along the way, we'll see how a number of interesting Scala features
-and programming language concepts come together, including: parametric and ad hoc polymorphism, context bounds,
-and Scala `for` comprehensions.
+In this post, I'll start by discussing type classes and implicits, then I'll explain how to implement
+the `Show` type class in Scala and how to make ordinary types like `Int` and `String` members of it.
+This will lead to a discussion of context bounds, which will allows us to add type constraints
+(`Option` as a member of `Show`). In the following post, I'll introduce higher-kinded types and
+show how to implement functors and monads.
 
 
 ## Why type classes?
 
 Rather than giving a general explanation of what type classes are, I'll try to explain some of the basic
-ideas in the examples that follow. Much better introductions to type classes than I could write,
+ideas in the examples that follow. Much better introductions to type classes than I could write
 can easily be found online. All I'll say here is that type classes are "like (Java) interfaces"
 but much more general and powerful. In particular, we'll see the following examples of what
 type classes can do that interfaces can't:
 
-1. Types can be made instances of type classes outside of their own definitions; this means, for
-  example, that we can instantiate type class instances for built-in types.
-2. Type class instantiation of parameterized types can be specialized depending on the type parameter.
-3. So-called "higher-kinded" types can be made instances of type classes.
+1. Types can be made members of type classes outside of their own definitions; this means, for
+  example, that we can make built-in types members of type classes.
+2. Type class instantiation of parameterized types can be specialized depending on the type parameter
+  ("ad hoc polymorphism").
+3. So-called "higher-kinded" types can be made members of type classes.
+
+## Options
+
+I'll be using options extensively as examples, so I'll briefly explain what they are: Options are basically
+a type-safe replacement for `null`. For any type `A`, the parameterized type `Option[A]` can take on either
+the value `None` or the value `Some(a)` for any value `a` of type `A`. For example, you could write a function
+that reads user input and expects an integer like this.
+
+{% highlight scala %}
+def getInteger(): Option[Int] = {
+  val s = StdIn.readLine()
+  try {
+    Some(s.toInt)
+  } catch {
+    case _: NumberFormatException => None
+  }
+}
+{% endhighlight %}
 
 ## Scala implicits
 
@@ -86,7 +103,7 @@ When the compiler encounters our function call, it notices that `10` is not of t
 `f`. In most statically-typed languages, this would immediately lead to a compilation error. The Scala compiler,
 however, searches within the "implicit scope" for an implicit conversion; in this case, it finds `any2option`,
 which can convert an `Int` to an `Option[Int]`, which *is* of the right type to be passed to `f`.
-The compiler then replaces our ordinary function call `f(10)` by `f(any2option(x))`.
+The compiler then replaces our ordinary function call `f(10)` by `f(any2option(10))`.
 
 Note that if we called `f(Some(10))`, the compiler would *still* print "10" to the screen (rather than "Some(10)")
 because an implicit conversion is not necessary (hence not used) in this case.
@@ -100,13 +117,12 @@ because an implicit conversion is not necessary (hence not used) in this case.
 Rather than just linking to that article, I thought it would be best to write up many of the ideas there using my own notation,
 terminology, and project structure in order to better motivate and prepare you for the following posts.
 
-If you've used Haskell before, you're probably familiar with the `Show` type class. Any type `T` that is an instance
+If you've used Haskell before, you're probably familiar with the `Show` type class. Any type `T` that is a member
 of `Show` can be passed to the `show` function, which returns a string. In other words, `show` determines how members
 of a type should be displayed on the screen. In order to make a new class a member of `Show`, we need to define `show`
 for that type. Let's implement `Show` in Scala.
 
 {% highlight scala %}
-// we'll start our code snippets with a comment indicating the file name
 // Show.scala
 
 trait Show[A] {
@@ -183,7 +199,7 @@ automatically find `int2show` and pass it in as the value of `showInstance`; thu
 `int2show.show(10)`. Similarly, `show("hello")` would call `string2show.show("hello")`.
 
 In a way, `show` is not fully generic even though it appears to be declared generically. Rather, `show[A](x)`
-will only work for values of `x` for which an instance of `Show[Int]` can be found. This is the basic idea of
+will only work for types `A` for which an instance `Show[A]` exists. This is the basic idea of
 **ad hoc polymorphism**.
 
 ## Defining a type class
@@ -211,14 +227,14 @@ A member of a type class is an implicit instantiation of the trait.
 ## Context bounds
 
 At this point we're basically done. We've implemented the `Show` type class and demonstrated how to make other
-types instances of it. However, there's a few things we get "for free" at this point that are worth discussing.
+types members of it. However, there's a few things we get "for free" at this point that are worth discussing.
 
 The type signature of `show` says that "`A` must have a type that implements the `Show`
 type class". This precise idea can be expressed using the following syntactic sugar supported by Scala: instead of
-declaring `show` as above, we write `def show[A: Show](a: A)` (this is called a **context bound**).
+declaring `show` as above, we write `def show[A: Show](a: A)`. The constraint `A: Show` is called a **context bound**.
 
 Now if you try making that replacement, you'll encounter an issue on the right-hand side: `showInstance` is no
-longer bound to anything. However, if `A` does have a `Show` instance (represented by an instance of `Show[A]`),
+longer bound to anything. However, if `A` does have a `Show` instance (represented by an implementation of `Show[A]`),
 an implicit parameter *will* be passed to `show` and can be retrieved within its scope by referring to
 `implicitly[Show[A]]`. Thus, the definition of `show` becomes the following.
 
@@ -234,10 +250,10 @@ object Show {
 This is not only cleaner, but better captures the fact that `show` does not use parametric polymorphism, but
 rather ad hoc polymorphism.
 
-## Type class instances with constraints
+## Type class membership with constraints
 
-Equipped with our knowledge of context bounds, we can now also make `Option[A]` a member of `Show`. That is,
-we can make it a member of `Show` *so long as `A` is a member of `Show`*. With context bounds, this constraint
+Equipped with our knowledge of context bounds, we can now also make `Option[A]` a member of `Show`... that is,
+*so long as `A` itself is a member of `Show`*. With context bounds, this constraint
 is incredibly easy to express! We just need something like
 `int2show`, but polymorphic. Since `val` declarations can't be parameterized by types, we use a `def` instead.
 
@@ -251,16 +267,17 @@ def option2show[A: Show](a: A): Show[Option[A]] = {
 }
 {% endhighlight %}
 
-We're using quite a bit of syntactic sugar here. In addition to specifying an anonymous object by an anonymous
-method, we're specifying this method by an anonymous pattern match.
+We're using quite a bit of syntactic sugar here. In addition to specifying an anonymous instance of a single-method
+trait by an anonymous method (as we did with `int2show`), we're also specifying this anonymous method by an anonymous
+pattern match.
 
 There's a problem with this. If we set `val x = Some(10)` and call `show(x)`, then everything works fine.
-But `show(Some(10))` doesn't compile. That's because `Some(10)` has type `Some[Int]`, which doesn't have the
-same type as `Option[Int]` (although it is a subtype).
+But `show(Some(10))` doesn't compile. That's because `Some(10)` has type `Some[Int]`, which isn't the
+same as `Option[Int]` (although it is a subtype).
 
 Instead of having `option2show` produce a `Show[Option[A]]`,
-we want it to produce an instance of `Show` for all subtypes of `Option[A]` (there are only two: `Some[A]` and `None`).
-In Scala, a constraint of this kind can be expressed by an *upper bound* using the `<:` operator. We'll have to
+we want it to produce an instance of `Show` for all subtypes of `Option[A]`.
+In Scala, a constraint of this kind can be expressed by an *upper bound* using `<:`. We'll have to
 introduce another type parameter `B` for this.
 
 {% highlight scala %}
@@ -276,7 +293,7 @@ object ShowClient {
 ## Implicit classes
 
 One more thing we can do is use implicit *classes*
-to automatically convert objects with an instance of `Show` to objects with a `show` *method*.
+to automatically convert objects that are members of `Show` to objects with a `show` *method*.
 
 **Implicit conversion IV.** Define an `implicit` class. Such a class can implicitly convert from
 the type of its constructor parameter to the class that it itself defines.
@@ -292,13 +309,13 @@ object Show {
 }
 {% endhighlight %}
 
-Now we can call `10.show` and it will behave as expected! In a way, we've "implicitly" extended the `Int` class
-(as well as any other member of the `Show` type class).
+Now we can call `10.show` or `Some(10).show` and it will behave as expected! In a way, we've "implicitly" extended
+the `Int` class and `Some[A]` (for `A: Show`) classes.
 
 Let's think about how this works. When `10.show` is called, the compiler looks for a `show` method in the `Int`
 class. It doesn't find one, so it looks in the implicit scope for *an implicitly defined type that has a `show`
 method and to which `Int` can be converted*. It finds the implicit class `ShowOps` and sees that `ShowOps`
-requires a parameter of a type `A` that has an instance of `Show`. Since `A = Int`, the compiler looks for
+requires a parameter of a type `A` that is a member of `Show`. Since `A = Int`, the compiler looks for
 an implicit conversion of `Int` to `Show` and finds[^2] `int2show`. It passes `10` explicitly and `int2show` implicitly
 to the constructor of `ShowOps`, which returns a new `ShowOps` object equipped with a method `show`. Since
 `implicitly[Show[A]]` is bound to the implicit constructor parameter `int2show`, the `show` method of this new
@@ -306,9 +323,9 @@ object calls `int2show.show(10)`.
 
 ## What's next?
 
-Next time, I'll discuss higher-kinded types, and how to define a `Functor` type class.
+Next time, I'll discuss higher-kinded types and the `Functor` and `Monad` type classes.
 
 
 [^1]: Indeed, [traits compile to interfaces](https://www.scala-lang.org/news/2.12.0-RC1/).
 
-[^2]: One sometimes says that the type checker has *proved* that `Int` is an instance of `Show`, i.e. that the requirement `Int: Show` can be satisfied.
+[^2]: One sometimes says that the type checker has *proved* that `Int` is a member of `Show`, i.e. that the requirement `Int: Show` can be satisfied.
