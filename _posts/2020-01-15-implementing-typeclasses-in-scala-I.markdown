@@ -67,7 +67,7 @@ an implicit conversion (this is necessary because `Int` is not a subtype of `Dou
 There are several ways to define implicit conversions. Rather than provide an exhaustive explanation,
 I'll sprinkle these throughout the post. Here's one way to do it.
 
-***Implicit conversion I.*** Define an `implicit` function or method that performs the implicit conversion
+**Implicit conversion I.** Define an `implicit` function or method that performs the implicit conversion
 
 Suppose we wanted to pass an ordinary (non-option) value `a` to a function of an option and have it automatically
 understood as `Some(a)`. Here's what we'd do.
@@ -148,7 +148,7 @@ function `show[A]` that works for any `A` *for which an instance of `Show[A]` ex
 polymorphism, because the type `A` is constrained. We need some way to express this constraint.
 This is where the notion of an implicit parameter comes in.
 
-***Implicit conversion II.*** Add an `implicit` parameter to the type signature of a function that may require
+**Implicit conversion II.** Add an `implicit` parameter to the type signature of a function that may require
 an implicit conversion.
 
 Let's define our `show` function and then explain how it works.
@@ -241,43 +241,53 @@ we can make it a member of `Show` *so long as `A` is a member of `Show`*. With c
 is incredibly easy to express! We just need something like
 `int2show`, but polymorphic. Since `val` declarations can't be parameterized by types, we use a `def` instead.
 
-***Implicit conversion III.*** Define a an `implicit` function that converts values of one type to values of
+**Implicit conversion III.** Define a an `implicit` function that converts values of one type to values of
 another.
 
 {% highlight scala %}
-// ShowClient.scala
-// ...
-object ShowClient {
-  // ...
-  def option2show[A: Show](a: A): Show[Option[A]] = {
-    case None => "None"
-    case Some(a) => s"Some(${show(a)})"
-  }
+def option2show[A: Show](a: A): Show[Option[A]] = {
+  case None => "None"
+  case Some(a) => s"Some(${show(a)})"
 }
 {% endhighlight %}
 
 We're using quite a bit of syntactic sugar here. In addition to specifying an anonymous object by an anonymous
 method, we're specifying this method by an anonymous pattern match.
 
-Be careful when trying to test this. Calling `show(Some(10))` will fail because `Some(10)` is of type `Some[Int]`
-and not of type `Option[Int]` (even though the former is a subtype of the latter). Calling `show(Some(10): Option[Int])`
-will work, though.
+There's a problem with this. If we set `val x = Some(10)` and call `show(x)`, then everything works fine.
+But `show(Some(10))` doesn't compile. That's because `Some(10)` has type `Some[Int]`, which doesn't have the
+same type as `Option[Int]` (although it is a subtype).
+
+Instead of having `option2show` produce a `Show[Option[A]]`,
+we want it to produce an instance of `Show` for all subtypes of `Option[A]` (there are only two: `Some[A]` and `None`).
+In Scala, a constraint of this kind can be expressed by an *upper bound* using the `<:` operator. We'll have to
+introduce another type parameter `B` for this.
+
+{% highlight scala %}
+// ShowClient.scala
+
+object ShowClient {
+  // ...
+  implicit def showOption[A: Show, B <: Option[A]]: Show[B] =
+    (b: B) => if (b.get == None) "None" else b.get.show
+}
+{% endhighlight %}
 
 ## Implicit classes
 
 One more thing we can do is use implicit *classes*
 to automatically convert objects with an instance of `Show` to objects with a `show` *method*.
 
-***Implicit conversion IV.*** Define an `implicit` class. Such a class can implicitly convert from
+**Implicit conversion IV.** Define an `implicit` class. Such a class can implicitly convert from
 the type of its constructor parameter to the class that it itself defines.
 
 {% highlight scala %}
 // Show.scala
+// ...
 
 object Show {
-  // ...
   implicit class ShowOps[A: Show](a: A) {
-    def show: String = implicitly[Show[A]].show(a)
+    def show: String = Show.show(a)
   }
 }
 {% endhighlight %}
@@ -296,11 +306,9 @@ object calls `int2show.show(10)`.
 
 ## What's next?
 
-Next time, I'll discuss how to make `Option` an instance of `Show`, higher-kinded types, and how to define a
-`Functor` type class.
+Next time, I'll discuss higher-kinded types, and how to define a `Functor` type class.
 
 
 [^1]: Indeed, [traits compile to interfaces](https://www.scala-lang.org/news/2.12.0-RC1/).
 
-[^2]: One sometimes says that the type checker has *proved* that `Int` is an instance of `Show`,
-i.e. that the requirement `Int: Show` can be satisfied.
+[^2]: One sometimes says that the type checker has *proved* that `Int` is an instance of `Show`, i.e. that the requirement `Int: Show` can be satisfied.
