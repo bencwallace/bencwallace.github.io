@@ -94,9 +94,9 @@ because an implicit conversion is not necessary (hence not used) in this case.
 **Terminology.** The fact that `any2option` works with parameters of any type is referred to as
 **parametric polymorphism**. This isn't especially relevant right now, but will be good to know later.
 
-## The `Show` type class
+## Beginning to define a type class
 
-**Note.** The rest of this post closely follows [Type classes in Scala](https://scalac.io/type classes-in-scala/).
+**Note.** Much of the following is based on [Type classes in Scala](https://scalac.io/type-classes-in-scala/).
 Rather than just linking to that article, I thought it would be best to write up many of the ideas there using my own notation,
 terminology, and project structure in order to better motivate and prepare you for the following posts.
 
@@ -107,7 +107,6 @@ for that type. Let's implement `Show` in Scala.
 
 {% highlight scala %}
 // we'll start our code snippets with a comment indicating the file name
-
 // Show.scala
 
 trait Show[A] {
@@ -120,62 +119,45 @@ will simply be traits. Now you might complain: *Traits are just Scala's versions
 different from an interface?* As you'll see, type classes are different in how we use them. Rather than extending them,
 we'll implement them *implicitly*.
 
-## Instantiating typeclass members
+## Instantiating type class members
 
-Suppose we wanted to make `Int` a member of `Show`. Since `Int` is *already defined*, we can't simply throw
-in `extends Show` or `with Show` to the declaration of `Int`. Part of the power of of implicits and typeclasses is that
-we can nevertheless make `Int` an instance of `Show`. All we need is an implicit conversion from `Int` to `Show[Int]`.
-We start with the following.
+Suppose we wanted to make `Int` a member of `Show`. Since `Int` is *already defined* elsewhere, we can't change it.
+However, we can define a *separate* object that realizes the instance of `Show` we would like.
 
 {% highlight scala %}
-// Show.scala
-
-object Show {
-  implicit val int2show: Show[Int] = x => s"$x"
-}
+val int2show: Show[Int] = x => s"$x"
 {% endhighlight %}
 
 Here we've used a bit of syntactic sugar. Since `Show` contains only one abstract method, we can define an anonymous
-class implementing just by specifying how that method is implemented. Moreover, this method can be specified as an
-anonymous function (because it's name, `show`, is already specified). That's why the right-hand side looks like an
+class implementing it just by specifying how that method is implemented. Moreover, this method can be given as an
+anonymous function (because it's name, `show`, is already determined). That's why the right-hand side looks like an
 anonymous function (with the same signature as `show` when `A = Int`). We've also used Scala's
 [string interpolation](https://docs.scala-lang.org/overviews/core/string-interpolation.html).
 
-Note that we've placed our implicit conversion inside the `Show` trait's companion object. Think of it this way:
-we, the implementers of the `Show` typeclass, are specifying a "default" instance for a common type. A client would
-still have to import this implementation in order to use. The necessity of such an import might seem like extra
-boilerplate, but in fact it allows a client to choose *not* to import our instance and instead define their own.
-This is an example of how, unlike in Haskell, a typeclass can have multiple instances that coexist.
+This is all well and good, but how does it help us?
+Let's remind ourselves of what we're trying to accomplish. We'd like to be able to pass an `Int` to `Show.show`.
+The latter is abstract, but we'd like it to be *implicitly defined* by `int2show.show`. We could call the latter
+directly, but this isn't really satisfactory. For example, suppose `Show` implemented an implicit conversion
+`string2show: Show[String]`. Now we'd have to call `string2show.show("hello")`. We'd like to be able to unify
+the `show` methods of `int2show`, `string2show`, and so on into *a single function*.
 
-**Ad hoc polymorphism**
+### Ad hoc polymorphism
 
-Our definition isn't complete yet. Right now, in order to show an integer, we have to do the following. Let's take
-the perspective of a client of `Show` and make a new file.
+What we want is a *polymorphic*
+function `show[A]` that works for any `A` *for which an instance of `Show[A]` exists*. This is *not* parametric
+polymorphism, because the type `A` is constrained. We need some way to express this constraint.
+This is where the notion of an implicit parameter comes in.
 
-{% highlight scala %}
-import Show._
-
-object Main {
-  def main(args: Array[String]): Unit = {
-  println(showInt.show(10))
-}
-{% endhighlight %}
-
-Now suppose we wanted to show some other type, like a string. Suppose `Show` implemented an implicit conversion
-`showString: Show[String]`. Now we'd have to call `showString.show("hello")`. This is unfortunate because we
-have to call a different function for each type we want to show. We can't necessarily make a generic `showAny`
-method because not all types are necessarily showable (e.g. function types). This is where the notion of an
-implicit parameter comes in.
-
-***Implicit conversion III.*** Add an `implicit` parameter to the type signature of a function that may require
+***Implicit conversion II.*** Add an `implicit` parameter to the type signature of a function that may require
 an implicit conversion.
+
+Let's define our `show` function and then explain how it works.
 
 {% highlight scala %}
 // Show.scala
+// ...
 
 object Show {
-  // ...
-
   def show[A](a: A)(implicit showInstance: Show[A]): String =
     showInstance.show(a)
 }
@@ -183,27 +165,68 @@ object Show {
 
 Even though `show` is generic, it takes an implicit parameter of type `Show[A]`. Because the parameter is implicit,
 we don't have to explicitly pass in a value for it. Rather, the compiler will look for an implicit object in the
-implicit scope that it can use, depending on the type parameter `A`. If we call `show(10)`, the compiler will
-automatically find `showInt` and pass it in as the value of `showInstance`; thus, `show(10)` will call
-`showInt.show(10)`. Similarly, `show("hello")` would call `showString.show("hello")`.
+current scope that it can use, depending on the type parameter `A`. For instance, we would like it to be able to
+find `int2show`, so we make that value implicit.
+
+{% highlight scala %}
+// ShowClient.scala
+
+import Show._
+
+object ShowInt {
+  implicit val int2show: Show[Int] = x => s"$x"
+}
+{% endhighlight %}
+
+Now if we call `show(10)` (with `int2show` in scope), the compiler will
+automatically find `int2show` and pass it in as the value of `showInstance`; thus, `show(10)` will call
+`int2show.show(10)`. Similarly, `show("hello")` would call `string2show.show("hello")`.
 
 In a way, `show` is not fully generic even though it appears to be declared generically. Rather, `show[A](x)`
 will only work for values of `x` for which an instance of `Show[Int]` can be found. This is the basic idea of
-**ad hoc polymorphism**. The type signature of `show` says that "`a` must have a type that implements the `Show`
-typeclass". This precise idea can be expressed using the following syntactic sugar supported by Scala: instead of
-declaring `show` as above, we write `def show[A: Show](a: A)` (this is called a **context bound**).
+**ad hoc polymorphism**.
 
-Now if you try making that replacement, you'll encounter an issue on the right-hand side; `showInstance` is no
-longer bound to anything. However, if `A` does have a `Show` instance (represented by an instance of `Show[A]`),
-an implicit parameter *will* be passed to `show` and can be retrieved within its scope by referring to
-`implicitly[Show[A]]`. Thus, the definition of show becomes the following.
+## Defining a type class
+
+Putting together what we saw above, here's how we define the `Show` typeclass.
 
 {% highlight scala %}
 // Show.scala
 
+trait Show[A] {
+  def show(a: A): String
+}
+
 object Show {
-  // ...
-  // replace the previous definition of `show` by the following
+  def show[A](a: A)(implicit showInstance: Show[A]): String =
+    showInstance.show(a)
+}
+{% endhighlight %}
+
+Essentially, a type class consists of a trait together with a companion object whose methods implicitly
+implement the trait's methods via ad hoc polymorphism.
+
+A member of a type class is an implicit instantiation of the trait.
+
+## Context bounds
+
+At this point we're basically done. We've implemented the `Show` type class and demonstrated how to make other
+types instances of it. However, there's a few things we get "for free" at this point that are worth discussing.
+
+The type signature of `show` says that "`A` must have a type that implements the `Show`
+type class". This precise idea can be expressed using the following syntactic sugar supported by Scala: instead of
+declaring `show` as above, we write `def show[A: Show](a: A)` (this is called a **context bound**).
+
+Now if you try making that replacement, you'll encounter an issue on the right-hand side: `showInstance` is no
+longer bound to anything. However, if `A` does have a `Show` instance (represented by an instance of `Show[A]`),
+an implicit parameter *will* be passed to `show` and can be retrieved within its scope by referring to
+`implicitly[Show[A]]`. Thus, the definition of `show` becomes the following.
+
+{% highlight scala %}
+// Show.scala
+// ...
+
+object Show {
   def show[A: Show](a: A): String = implicitly[Show[A]].show(a)
 }
 {% endhighlight %}
@@ -211,44 +234,70 @@ object Show {
 This is not only cleaner, but better captures the fact that `show` does not use parametric polymorphism, but
 rather ad hoc polymorphism.
 
-**Making things object-oriented**
+## Type class instances with constraints
 
-There's still something a bit unsatisfying about this. Initially, we declared `show` as an abstract `method`
-of `Show`. But now we're using it as a function. If we declared a new type, we might be tempted to simply
-let it extend the `Show` trait and override the `show` *method*. It turns out we can use implicit *classes*
-to automatically convert objects with an instance of `Show` to objects with a `show` method.
+Equipped with our knowledge of context bounds, we can now also make `Option[A]` a member of `Show`. That is,
+we can make it a member of `Show` *so long as `A` is a member of `Show`*. With context bounds, this constraint
+is incredibly easy to express! We just need something like
+`int2show`, but polymorphic. Since `val` declarations can't be parameterized by types, we use a `def` instead.
 
-***Implicit conversion IV.*** Define an `implicit` class. Such a class behaves as a type conversion from
-the type of the object passed to its constructor to its own type.
+***Implicit conversion III.*** Define a an `implicit` function that converts values of one type to values of
+another.
+
+{% highlight scala %}
+// ShowClient.scala
+// ...
+object ShowClient {
+  // ...
+  def option2show[A: Show](a: A): Show[Option[A]] = {
+    case None => "None"
+    case Some(a) => s"Some(${show(a)})"
+  }
+}
+{% endhighlight %}
+
+We're using quite a bit of syntactic sugar here. In addition to specifying an anonymous object by an anonymous
+method, we're specifying this method by an anonymous pattern match.
+
+Be careful when trying to test this. Calling `show(Some(10))` will fail because `Some(10)` is of type `Some[Int]`
+and not of type `Option[Int]` (even though the former is a subtype of the latter). Calling `show(Some(10): Option[Int])`
+will work, though.
+
+## Implicit classes
+
+One more thing we can do is use implicit *classes*
+to automatically convert objects with an instance of `Show` to objects with a `show` *method*.
+
+***Implicit conversion IV.*** Define an `implicit` class. Such a class can implicitly convert from
+the type of its constructor parameter to the class that it itself defines.
 
 {% highlight scala %}
 // Show.scala
 
 object Show {
   // ...
-  // dispense with the `show` method define above entirely
-  // do the following instead
   implicit class ShowOps[A: Show](a: A) {
     def show: String = implicitly[Show[A]].show(a)
   }
 }
 {% endhighlight %}
 
-Now we can call `10.show` and it will behave as expected! In a way, we've "implicitly" extended the `Int` class.
+Now we can call `10.show` and it will behave as expected! In a way, we've "implicitly" extended the `Int` class
+(as well as any other member of the `Show` type class).
 
 Let's think about how this works. When `10.show` is called, the compiler looks for a `show` method in the `Int`
 class. It doesn't find one, so it looks in the implicit scope for *an implicitly defined type that has a `show`
 method and to which `Int` can be converted*. It finds the implicit class `ShowOps` and sees that `ShowOps`
-requires an a parameter of a type `A` that has an instance of `Show`. Since `A = Int`, the compiler looks for
-an implicit conversion of `Int` to `Show` and finds[^2] `showInt`. It passes `10` explicitly and `showInt` implicitly
+requires a parameter of a type `A` that has an instance of `Show`. Since `A = Int`, the compiler looks for
+an implicit conversion of `Int` to `Show` and finds[^2] `int2show`. It passes `10` explicitly and `int2show` implicitly
 to the constructor of `ShowOps`, which returns a new `ShowOps` object equipped with a method `show`. Since
-`implicitly[Show[A]]` is bound to the implicit constructor parameter `showInt`, the `show` method of this new
-object calls `showInt.show(10)`.
+`implicitly[Show[A]]` is bound to the implicit constructor parameter `int2show`, the `show` method of this new
+object calls `int2show.show(10)`.
 
-# What's next?
+## What's next?
 
 Next time, I'll discuss how to make `Option` an instance of `Show`, higher-kinded types, and how to define a
-`Functor` typeclass.
+`Functor` type class.
 
 
 [^1]: Indeed, [traits compile to interfaces](https://www.scala-lang.org/news/2.12.0-RC1/).
