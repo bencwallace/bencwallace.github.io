@@ -11,4 +11,4 @@ I'm a developer at [FLXFlight](https://www.flxflight.com/) in Vienna. These days
 
 My background is in mathematics, specifically probability theory. I worked as a postdoctoral researcher at [IST Austria](https://ist.ac.at/en/home/), under [Laszlo Erdös](https://ist.ac.at/en/research/math-comp-sciences/erdoes-group/) and completed my PhD at the [University of British Columbia](https://www.ubc.ca/) under [Gordon Slade](https://www.math.ubc.ca/~slade/). My research involved studying models from statistical physics.
 
-[![]({{site.url}}/assets/plot2d_bridge.png){:class="img-responsive"}](https://plot.ly/~bencwallace/14/)
+[![](/assets/plot2d_bridge.png){:class="img-responsive"}](https://plot.ly/~bencwallace/14/)
