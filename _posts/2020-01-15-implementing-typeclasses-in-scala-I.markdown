@@ -9,8 +9,10 @@ I've been learning Scala recently and have been very impressed with the power of
 its features as well as the way in which it seamlessly combines object-oriented
 and functional programming. Nevertheless, some of these features can seem a bit
 tricky and learning resources can be relatively hard to find. In particular, I had some
-difficulty wrapping my head around *implicits*. Things came together when I began to
-ask myself: what are the analogs of Haskell's type classes in Scala?
+difficulty wrapping my head around [*implicits*](https://docs.scala-lang.org/tour/implicit-parameters.html).
+Things came together when I began to
+ask myself: what are the analogs of [Haskell's type classes](https://en.wikibooks.org/wiki/Haskell/Classes_and_types)
+in Scala?
 
 It turns out that, unlike
 in Haskell, type classes are not built-in to the language; rather, they can be *implemented*
@@ -20,7 +22,8 @@ Moreover, due to Scala's object-oriented nature, type classes can
 inherit from one another.
 
 Note that there already exist some Scala libraries, such as
-[Scalaz](https://github.com/scalaz/scalaz), that develop many useful type classes,
+[Scalaz](https://github.com/scalaz/scalaz) and [Cats](https://github.com/typelevel/cats),
+that develop many useful type classes,
 but for the purpose of understanding how this is done I think it's best to start from scratch.
 
 **Prerequisites.** I will make use of some basic Scala features. Implicits are the only feature
@@ -35,9 +38,11 @@ could be improved in this post, please let me know.
 
 ## Roadmap
 
-In this post, I'll start by discussing type classes and implicits, then I'll explain how to implement
-the `Measurable` type class in Scala and how to make ordinary types like `Int` and `String` members of it.
-This will lead to a discussion of context bounds, which will allow us to add type constraints.
+In this post, I'll start by discussing type classes, options, and implicits. Then I'll introdue
+`Measurable`, a made-up type class that we'll work with, and show how to make ordinary types like
+`Int` and `String` members of it.
+This will lead to a discussion of context bounds, which will allow us to add type constraints and implement
+an instance of `Option` for `Measurable`. I'll wrap up with a brief discussion of implicit classes.
 
 
 ## Why type classes?
@@ -58,7 +63,8 @@ type classes can do that interfaces can't:
 
 I'll be using options extensively as examples, so I'll briefly explain what they are: Options are basically
 a type-safe replacement for `null`. For any type `A`, the parameterized type `Option[A]` can take on either
-the value `None` or the value `Some(x)` for any value `a` of type `A`. For example, you could write a function
+the value `None` or the value `Some(x)` for any value `a` of type `A`. For example, you could use options
+to write a function
 that reads user input and expects an integer like this.
 
 {% highlight scala %}
@@ -71,6 +77,10 @@ def getInteger(): Option[Int] = {
   }
 }
 {% endhighlight %}
+
+Here `None` is used as a type-safe way of signalling that the user did not input a number. This is different
+from returning `null` because we're actually returning an object and avoiding the possibility of a
+`NullPointerException`.
 
 ## Scala implicits
 
@@ -107,7 +117,8 @@ Note that if we called `f(Some(10))`, the compiler would *still* print "10" to t
 because an implicit conversion is not necessary (hence not used) in this case.
 
 **Terminology.** The fact that `any2option` works with parameters of any type is referred to as
-**parametric polymorphism**. This isn't especially relevant right now, but will be good to know later.
+[**parametric polymorphism**](https://en.wikipedia.org/wiki/Parametric_polymorphism).
+This isn't especially relevant right now, but will be good to know later.
 
 ## Beginning to define a type class
 
@@ -135,9 +146,10 @@ This requirement cannot be expressed, at least in plain Scala, because it requir
 
 ## Instantiating type class members
 
-So far that was pretty simply. The `Measurable` type class is just a trait with a single method. In fact, all the typeclases we define
-will simply be traits. Now you might complain: *Traits are just Scala's versions of interfaces[^1]. So how is a type class
-different from an interface?* Type classes are different in how we use them. Rather than extending them,
+So far that was pretty simply. All we did was define a trait with a single method.
+Now you might complain: *Traits are just Scala's versions of interfaces[^1]. So how is a type class
+different from an interface?* Well, for starters, we're actually not done with the type class definition.
+But more importantly, type classes are different in how we use them. Rather than extending them,
 we'll implement them *implicitly*.
 
 Suppose we wanted to make `Int` a member of `Measurable`. Since `Int` is *already defined* elsewhere, we can't change it.
@@ -203,7 +215,7 @@ automatically find `int2measure` and pass it in as the value of `measureInstance
 
 In a way, `measure` is not fully generic even though it appears to be declared generically. Rather, `measure[A](x)`
 will only work for types `A` for which an instance `Measurable[A]` exists. This is the basic idea of
-**ad hoc polymorphism**.
+[**ad hoc polymorphism**](https://en.wikipedia.org/wiki/Ad_hoc_polymorphism).
 
 ## Defining a type class
 
@@ -234,7 +246,8 @@ types members of it. However, there's a few things we get "for free" at this poi
 
 The type signature of `measure` says that "`A` must have a type that implements the `Measurable`
 type class". This precise idea can be expressed using the following syntactic sugar supported by Scala: instead of
-declaring `measure` as above, we write `def measure[A: Measurable](x: A)`. The constraint `A: Measurable` is called a **context bound**.
+declaring `measure` as above, we write `def measure[A: Measurable](x: A)`. The constraint `A: Measurable` is called a
+[**context bound**](https://docs.scala-lang.org/tutorials/FAQ/context-bounds.html).
 
 Now if you try making that replacement, you'll encounter an issue on the right-hand side: `measureInstance` is no
 longer bound to anything. However, if `A` does have a `Measurable` instance (represented by an implementation of `Measurable[A]`),
