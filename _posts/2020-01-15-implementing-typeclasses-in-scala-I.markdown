@@ -2,7 +2,7 @@
 layout: post
 title:  "Implementing type classes in Scala I"
 date:   2020-01-15 00:37:44 +0100
-categories: scala typeclasses polymorphism
+categories: scala implicits typeclasses polymorphism
 ---
 
 I've been learning Scala recently and have been very impressed with the power of some of
@@ -36,10 +36,8 @@ could be improved in this post, please let me know.
 ## Roadmap
 
 In this post, I'll start by discussing type classes and implicits, then I'll explain how to implement
-the `Show` type class in Scala and how to make ordinary types like `Int` and `String` members of it.
-This will lead to a discussion of context bounds, which will allows us to add type constraints
-(`Option` as a member of `Show`). In the following post, I'll introduce higher-kinded types and
-show how to implement functors and monads.
+the `Measurable` type class in Scala and how to make ordinary types like `Int` and `String` members of it.
+This will lead to a discussion of context bounds, which will allow us to add type constraints.
 
 
 ## Why type classes?
@@ -60,7 +58,7 @@ type classes can do that interfaces can't:
 
 I'll be using options extensively as examples, so I'll briefly explain what they are: Options are basically
 a type-safe replacement for `null`. For any type `A`, the parameterized type `Option[A]` can take on either
-the value `None` or the value `Some(a)` for any value `a` of type `A`. For example, you could write a function
+the value `None` or the value `Some(x)` for any value `a` of type `A`. For example, you could write a function
 that reads user input and expects an integer like this.
 
 {% highlight scala %}
@@ -87,7 +85,7 @@ I'll sprinkle these throughout the post. Here's one way to do it.
 **Implicit conversion I.** Define an `implicit` function or method that performs the implicit conversion
 
 Suppose we wanted to pass an ordinary (non-option) value `a` to a function of an option and have it automatically
-understood as `Some(a)`. Here's what we'd do.
+understood as `Some(x)`. Here's what we'd do.
 
 {% highlight scala %}
 implicit def any2option[A](x: A): Option[A] = Some(x)
@@ -113,213 +111,222 @@ because an implicit conversion is not necessary (hence not used) in this case.
 
 ## Beginning to define a type class
 
-**Note.** Much of the following is based on [Type classes in Scala](https://scalac.io/type-classes-in-scala/).
-Rather than just linking to that article, I thought it would be best to write up many of the ideas there using my own notation,
-terminology, and project structure in order to better motivate and prepare you for the following posts.
-
-If you've used Haskell before, you're probably familiar with the `Show` type class. Any type `T` that is a member
-of `Show` can be passed to the `show` function, which returns a string. In other words, `show` determines how members
-of a type should be displayed on the screen. In order to make a new class a member of `Show`, we need to define `show`
-for that type. Let's implement `Show` in Scala.
+I decided to start with a very simple, made-up type class `Measurable`. Members of member have values that can be
+"measured" in some way. It doesn't really matter how but some ideas that come to mind are: the measure of a
+numeric value could be its absolute value; the measure of a string could be its length; the measure of a list of measurable
+values could be the sum of their measures; and so on.
 
 {% highlight scala %}
-// Show.scala
+// Measurable.scala
 
-trait Show[A] {
-  def show(a: A): String
+trait Measurable[A] {
+  def measure(x: A): Double
 }
 {% endhighlight %}
 
-That's pretty simple. The `Show` type class is just a trait with a single method. In fact, all the typeclases we define
-will simply be traits. Now you might complain: *Traits are just Scala's versions of interfaces[^1]. So how is a type class
-different from an interface?* As you'll see, type classes are different in how we use them. Rather than extending them,
-we'll implement them *implicitly*.
+In addition to this, we'll also define a "law" for `Measurable`. This is a contract that clients of measurable are expected
+to obey but that cannot be enforced by the type system. Numerous common type classes derived from mathematics, such as
+functors and monads, have laws of this kind. Our `Measurable` law will be the following.
+
+**Measurable law.** The `measure` function must produce non-negative values.
+
+This requirement cannot be expressed, at least in plain Scala, because it requires [refinement types](https://en.wikipedia.org/wiki/Refinement_type)
+(however, there does appear to be a [library](https://github.com/fthomas/refined) for refinement types in Scala).
 
 ## Instantiating type class members
 
-Suppose we wanted to make `Int` a member of `Show`. Since `Int` is *already defined* elsewhere, we can't change it.
-However, we can define a *separate* object that realizes the instance of `Show` we would like.
+So far that was pretty simply. The `Measurable` type class is just a trait with a single method. In fact, all the typeclases we define
+will simply be traits. Now you might complain: *Traits are just Scala's versions of interfaces[^1]. So how is a type class
+different from an interface?* Type classes are different in how we use them. Rather than extending them,
+we'll implement them *implicitly*.
+
+Suppose we wanted to make `Int` a member of `Measurable`. Since `Int` is *already defined* elsewhere, we can't change it.
+However, we can define a *separate* object that realizes the instance of `Measurable` we would like.
 
 {% highlight scala %}
-val int2show: Show[Int] = x => s"$x"
+val int2measure: Measurable[Int] = x => x
 {% endhighlight %}
 
-Here we've used a bit of syntactic sugar. Since `Show` contains only one abstract method, we can define an anonymous
+Here we've used a bit of syntactic sugar. Since `Measurable` contains only one abstract method, we can define an anonymous
 class implementing it just by specifying how that method is implemented. Moreover, this method can be given as an
-anonymous function (because it's name, `show`, is already determined). That's why the right-hand side looks like an
-anonymous function (with the same signature as `show` when `A = Int`). We've also used Scala's
+anonymous function (because it's name, `measure`, is already determined). That's why the right-hand side looks like an
+anonymous function (with the same signature as `measure` when `A = Int`). We've also used Scala's
 [string interpolation](https://docs.scala-lang.org/overviews/core/string-interpolation.html).
 
 This is all well and good, but how does it help us?
-Let's remind ourselves of what we're trying to accomplish. We'd like to be able to pass an `Int` to `Show.show`.
-The latter is abstract, but we'd like it to be *implicitly defined* by `int2show.show`. We could call the latter
-directly, but this isn't really satisfactory. For example, suppose `Show` implemented an implicit conversion
-`string2show: Show[String]`. Now we'd have to call `string2show.show("hello")`. We'd like to be able to unify
-the `show` methods of `int2show`, `string2show`, and so on into *a single function*.
+Let's remind ourselves of what we're trying to accomplish. We'd like to be able to pass an `Int` to `Measurable.measure`.
+The latter is abstract, but we'd like it to be *implicitly defined* by `int2measure.measure`. We could call the latter
+directly, but this isn't really satisfactory. For example, suppose we implemented another implicit conversion
+`string2measure: Measurable[String]`. Now we'd have to call `string2measure.measure("hello")`. We'd like to be able to unify
+the `measure` methods of `int2measure`, `string2measure`, and so on into *a single function*.
 
 ### Ad hoc polymorphism
 
 What we want is a *polymorphic*
-function `show[A]` that works for any `A` *for which an instance of `Show[A]` exists*. This is *not* parametric
+function `measure[A]` that works for any `A` *for which an instance of `Measurable[A]` exists*. This is *not* parametric
 polymorphism, because the type `A` is constrained. We need some way to express this constraint.
 This is where the notion of an implicit parameter comes in.
 
 **Implicit conversion II.** Add an `implicit` parameter to the type signature of a function that may require
 an implicit conversion.
 
-Let's define our `show` function and then explain how it works.
+Let's define our `measure` function and then explain how it works.
 
 {% highlight scala %}
-// Show.scala
+// Measurable.scala
 // ...
 
-object Show {
-  def show[A](a: A)(implicit showInstance: Show[A]): String =
-    showInstance.show(a)
+object Measurable {
+  def measure[A](x: A)(implicit measureInstance: Measurable[A]): Double =
+    measureInstance.measure(x)
 }
 {% endhighlight %}
 
-Even though `show` is generic, it takes an implicit parameter of type `Show[A]`. Because the parameter is implicit,
+Even though `measure` is generic, it takes an implicit parameter of type `Measurable[A]`. Because the parameter is implicit,
 we don't have to explicitly pass in a value for it. Rather, the compiler will look for an implicit object in the
 current scope that it can use, depending on the type parameter `A`. For instance, we would like it to be able to
-find `int2show`, so we make that value implicit.
+find `int2measure`, so we make that value implicit.
 
 {% highlight scala %}
-// ShowClient.scala
+// MeasurableClient.scala
 
-import Show._
+import Measurable._
 
-object ShowInt {
-  implicit val int2show: Show[Int] = x => s"$x"
+object MeasurableInt {
+  implicit val int2measure: Measurable[Int] = x => x
 }
 {% endhighlight %}
 
-Now if we call `show(10)` (with `int2show` in scope), the compiler will
-automatically find `int2show` and pass it in as the value of `showInstance`; thus, `show(10)` will call
-`int2show.show(10)`. Similarly, `show("hello")` would call `string2show.show("hello")`.
+Now if we call `measure(10)` (with `int2measure` in scope), the compiler will
+automatically find `int2measure` and pass it in as the value of `measureInstance`; thus, `measure(10)` will call
+`int2measure.measure(10)`. Similarly, `measure("hello")` would call `string2measure.measure("hello")`.
 
-In a way, `show` is not fully generic even though it appears to be declared generically. Rather, `show[A](x)`
-will only work for types `A` for which an instance `Show[A]` exists. This is the basic idea of
+In a way, `measure` is not fully generic even though it appears to be declared generically. Rather, `measure[A](x)`
+will only work for types `A` for which an instance `Measurable[A]` exists. This is the basic idea of
 **ad hoc polymorphism**.
 
 ## Defining a type class
 
-Putting together what we saw above, here's how we define the `Show` typeclass.
+Putting together what we saw above, here's how we define the `Measurable` typeclass.
 
 {% highlight scala %}
-// Show.scala
+// Measurable.scala
 
-trait Show[A] {
-  def show(a: A): String
+trait Measurable[A] {
+  def measure(x: A): Double
 }
 
-object Show {
-  def show[A](a: A)(implicit showInstance: Show[A]): String =
-    showInstance.show(a)
+object Measurable {
+  def measure[A](x: A)(implicit measureInstance: Measurable[A]): Double =
+    measureInstance.measure(x)
 }
 {% endhighlight %}
 
 Essentially, a type class consists of a trait together with a companion object whose methods implicitly
 implement the trait's methods via ad hoc polymorphism.
 
-A member of a type class is an implicit instantiation of the trait.
+A member of a type class is an implicit instantiation of that trait.
 
 ## Context bounds
 
-At this point we're basically done. We've implemented the `Show` type class and demonstrated how to make other
+At this point we're basically done. We've implemented the `Measurable` type class and demonstrated how to make other
 types members of it. However, there's a few things we get "for free" at this point that are worth discussing.
 
-The type signature of `show` says that "`A` must have a type that implements the `Show`
+The type signature of `measure` says that "`A` must have a type that implements the `Measurable`
 type class". This precise idea can be expressed using the following syntactic sugar supported by Scala: instead of
-declaring `show` as above, we write `def show[A: Show](a: A)`. The constraint `A: Show` is called a **context bound**.
+declaring `measure` as above, we write `def measure[A: Measurable](x: A)`. The constraint `A: Measurable` is called a **context bound**.
 
-Now if you try making that replacement, you'll encounter an issue on the right-hand side: `showInstance` is no
-longer bound to anything. However, if `A` does have a `Show` instance (represented by an implementation of `Show[A]`),
-an implicit parameter *will* be passed to `show` and can be retrieved within its scope by referring to
-`implicitly[Show[A]]`. Thus, the definition of `show` becomes the following.
+Now if you try making that replacement, you'll encounter an issue on the right-hand side: `measureInstance` is no
+longer bound to anything. However, if `A` does have a `Measurable` instance (represented by an implementation of `Measurable[A]`),
+an implicit parameter *will* be passed to `measure` and can be retrieved within its scope by referring to
+`implicitly[Measurable[A]]`. Thus, the definition of `measure` becomes the following.
 
 {% highlight scala %}
-// Show.scala
+// Measurable.scala
 // ...
 
-object Show {
-  def show[A: Show](a: A): String = implicitly[Show[A]].show(a)
+object Measurable {
+  def measure[A: Measurable](x: A): Double =
+    implicitly[Measurable[A]].measure(x)
 }
 {% endhighlight %}
 
-This is not only cleaner, but better captures the fact that `show` does not use parametric polymorphism, but
-rather ad hoc polymorphism.
+This is not only cleaner, but better captures the fact that `measure` uses ad hoc rather than parametric polymorphism.
 
 ## Type class membership with constraints
 
-Equipped with our knowledge of context bounds, we can now also make `Option[A]` a member of `Show`... that is,
-*so long as `A` itself is a member of `Show`*. With context bounds, this constraint
+Equipped with our knowledge of context bounds, we can now also make `Option[A]` a member of `Measurable`... that is,
+*so long as `A` itself is a member of `Measurable`*. With context bounds, this constraint
 is incredibly easy to express! We just need something like
-`int2show`, but polymorphic. Since `val` declarations can't be parameterized by types, we use a `def` instead.
+`int2measure`, but polymorphic. Since `val` declarations can't be parameterized, we use a `def` instead.
 
 **Implicit conversion III.** Define a an `implicit` function that converts values of one type to values of
 another.
 
 {% highlight scala %}
-def option2show[A: Show](a: A): Show[Option[A]] = {
-  case None => "None"
-  case Some(a) => s"Some(${show(a)})"
+def option2measure[A: Measurable](x: A): Measurable[Option[A]] = {
+  case None => 0
+  case Some(x) => measure(x)
 }
 {% endhighlight %}
 
 We're using quite a bit of syntactic sugar here. In addition to specifying an anonymous instance of a single-method
-trait by an anonymous method (as we did with `int2show`), we're also specifying this anonymous method by an anonymous
+trait by an anonymous method (as we did with `int2measure`), we're also specifying this anonymous method by an anonymous
 pattern match.
 
-There's a problem with this. If we set `val x = Some(10)` and call `show(x)`, then everything works fine.
-But `show(Some(10))` doesn't compile. That's because `Some(10)` has type `Some[Int]`, which isn't the
+There's a problem with this. If we set `val x = Some(10)` and call `measure(x)`, then everything works fine.
+But `measure(Some(10))` doesn't compile. That's because `Some(10)` has type `Some[Int]`, which isn't the
 same as `Option[Int]` (although it is a subtype).
 
-Instead of having `option2show` produce a `Show[Option[A]]`,
-we want it to produce an instance of `Show` for all subtypes of `Option[A]`.
+Instead of having `option2measure` produce a `Measurable[Option[A]]`,
+we want it to produce an instance of `Measurable` for all subtypes of `Option[A]`.
 In Scala, a constraint of this kind can be expressed by an *upper bound* using `<:`. We'll have to
 introduce another type parameter `B` for this.
 
 {% highlight scala %}
-// ShowClient.scala
+// MeasurableClient.scala
 
-object ShowClient {
+object MeasurableClient {
   // ...
-  implicit def showOption[A: Show, B <: Option[A]]: Show[B] =
-    (b: B) => if (b.get == None) "None" else b.get.show
+  implicit def measureOption[A: Measurable, B <: Option[A]]: Measurable[B] =
+    (x: B) => if (b.get == None) "None" else b.get.measure
 }
 {% endhighlight %}
+
+Function signatures like this one can be somewhat daunting at first but are incredibly informative.
+All we're saying is that, given any `A` that is a member of `Measurable`, we can implicitly define
+an instance of `Measurable[B]` for any subtype `B` of `Option[A]`.
 
 ## Implicit classes
 
 One more thing we can do is use implicit *classes*
-to automatically convert objects that are members of `Show` to objects with a `show` *method*.
+to automatically convert objects that are members of `Measurable` to objects with a `measure` *method*.
 
 **Implicit conversion IV.** Define an `implicit` class. Such a class can implicitly convert from
 the type of its constructor parameter to the class that it itself defines.
 
 {% highlight scala %}
-// Show.scala
+// Measurable.scala
 // ...
 
-object Show {
-  implicit class ShowOps[A: Show](a: A) {
-    def show: String = Show.show(a)
+object Measurable {
+  implicit class MeasurableOps[A: Measurable](x: A) {
+    def measure: Double = Measurable.measure(x)
   }
 }
 {% endhighlight %}
 
-Now we can call `10.show` or `Some(10).show` and it will behave as expected! In a way, we've "implicitly" extended
-the `Int` class and `Some[A]` (for `A: Show`) classes.
+Now we can call `10.measure` or `Some(10).measure` and it will behave as expected! In a way, we've "implicitly" extended
+the `Int` class and `Some[A]` (for `A: Measurable`) classes.
 
-Let's think about how this works. When `10.show` is called, the compiler looks for a `show` method in the `Int`
-class. It doesn't find one, so it looks in the implicit scope for *an implicitly defined type that has a `show`
-method and to which `Int` can be converted*. It finds the implicit class `ShowOps` and sees that `ShowOps`
-requires a parameter of a type `A` that is a member of `Show`. Since `A = Int`, the compiler looks for
-an implicit conversion of `Int` to `Show` and finds[^2] `int2show`. It passes `10` explicitly and `int2show` implicitly
-to the constructor of `ShowOps`, which returns a new `ShowOps` object equipped with a method `show`. Since
-`implicitly[Show[A]]` is bound to the implicit constructor parameter `int2show`, the `show` method of this new
-object calls `int2show.show(10)`.
+Let's think about how this works. When `10.measure` is called, the compiler looks for a `measure` method in the `Int`
+class. It doesn't find one, so it looks in the implicit scope for *an implicitly defined type that has a `measure`
+method and to which `Int` can be converted*. It finds the implicit class `MeasurableOps` and sees that `MeasurableOps`
+requires a parameter of a type `A` that is a member of `Measurable`. Since `A = Int`, the compiler looks for
+an implicit conversion of `Int` to `Measurable` and finds[^2] `int2measure`. It passes `10` explicitly and `int2measure` implicitly
+to the constructor of `MeasurableOps`, which returns a new `MeasurableOps` object equipped with a method `measure`. Since
+`implicitly[Measurable[A]]` is bound to the implicit constructor parameter `int2measure`, the `measure` method of this new
+object calls `int2measure.measure(10)`.
 
 ## What's next?
 
@@ -328,4 +335,4 @@ Next time, I'll discuss higher-kinded types and the `Functor` and `Monad` type c
 
 [^1]: Indeed, [traits compile to interfaces](https://www.scala-lang.org/news/2.12.0-RC1/).
 
-[^2]: One sometimes says that the type checker has *proved* that `Int` is a member of `Show`, i.e. that the requirement `Int: Show` can be satisfied.
+[^2]: One sometimes says that the type checker has *proved* that `Int` is a member of `Measurable`, i.e. that the requirement `Int: Measurable` can be satisfied.
