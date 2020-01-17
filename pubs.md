@@ -4,9 +4,11 @@ title: pubs
 permalink: /pubs/
 ---
 
-# publications
+## publications
 
-## Critical two-point function for long-range $$O(n)$$ models below the upper critical dimension
+A broad (albeit somewhat technical) overview of my research can be found in my [research statement]({{site.url}}/assets/research.pdf).
+
+### Critical two-point function for long-range $$O(n)$$ models below the upper critical dimension
 
 #### M. Lohmann, G. Slade, B. C. Wallace, Journal of Statistical Physics, 169:1132-1161 (2017)
 
@@ -15,7 +17,7 @@ We consider the $$n$$-component $$\mid\phi\mid^4$$ lattice spin model ($$n \ge 1
 [JSP](https://link.springer.com/article/10.1007/s10955-017-1904-x)
 [arXiv](https://arxiv.org/abs/1705.08540)
 
-## Four-dimensional weakly self-avoiding walk with contact self-attraction
+### Four-dimensional weakly self-avoiding walk with contact self-attraction
 
 #### R. Bauerschmidt, G. Slade, B. C. Wallace, Journal of Statistical Physics, 167:317&ndash;350 (2017)
 
@@ -24,7 +26,7 @@ We consider the critical behaviour of the continuous-time weakly self-avoiding w
 [JSP](https://link.springer.com/article/10.1007/s10955-017-1754-6)
 [arXiv](https://arxiv.org/abs/1610.08573)
 
-## Finite-order correlation length for 4-dimensional weakly self-avoiding walk and $$\mid\varphi\mid^4$$ spins
+### Finite-order correlation length for 4-dimensional weakly self-avoiding walk and $$\mid\varphi\mid^4$$ spins
 
 #### R. Bauerschmidt, G. Slade, A. Tomberg, B. C. Wallace, Annales Henri Poincaré, 18:375&ndash;402 (2017)
 
@@ -33,16 +35,16 @@ We study the four-dimensional $$n$$-component $$\mid\varphi\mid^4$$ spin model f
 [AHP](https://link.springer.com/article/10.1007/s00023-016-0499-0)
 [arXiv](https://arxiv.org/abs/1511.02790)
 
-# theses
+## theses
 
-## Renormalization group analysis of self-interacting walks and spin systems
+### Renormalization group analysis of self-interacting walks and spin systems
 
-### University of British Columbia (2017)
+#### University of British Columbia (2017)
 
 The central concern of this thesis is the study of critical behaviour in models of statistical physics in the upper-critical dimension. We study a generalized $$n$$-component lattice $$\mid\varphi\mid^4$$ model and a model of weakly self-avoiding walk with nearest-neighbour contact self-attraction on the Euclidean lattice $$\mathbb{Z}^d$$. By utilizing a supersymmetric integral representation involving boson and fermion fields, the two models are studied in a unified manner. Our main result, which is contingent on a small coupling hypothesis, identifies the precise leading-order asymptotics of the two-point function, susceptibility, and finite-order correlation length of both models in $$d = 4$$. In particular, we show that the critical two-point function satisfies mean-field scaling whereas the near-critical susceptibility and finite-order correlation length exhibit logarithmic corrections to mean-field behaviour. The proof employs a renormalization group method of Bauerschmidt, Brydges, and Slade based on a finite-range covariance decomposition and requires two extensions to this method. The first extension, which is required for the computation of the finite-order correlation length (even for the ordinary weakly self-avoiding walk and $$\mid\varphi\mid^4$$ model), is an improvement of the norms used to control the evolution of the renormalization group. This allows us to obtain improved error estimates in the massive regime of the renormalization group flow. The second extension involves the identification of critical parameters for models initialized with a non-zero error coordinate coupled to a marginal/relevant coordinate. This allows us, for example, to realize the two-point function and susceptibility for the walk with self-attraction as a small perturbation of the corresponding quantities without self-attraction, whose asymptotic behaviour was determined by Bauerschmidt, Brydges, and Slade. This establishes a form of universality.
 
-## On the Critical Points of Gaussian Mixtures
+### On the Critical Points of Gaussian Mixtures
 
-### Queen's University (2013)
+#### Queen's University (2013)
 
 This thesis is concerned with studying the question whether or not Gaussian mixtures have finitely many critical points. The relevance of this problem to the convergence of the mean-shift algorithm is discussed and an overview of some basic properties of the critical points of Gaussian mixtures is provided. Some previous results that are then reviewed include a reduction of this problem to the homoscedastic case and the construction of a very simple mixture with a large but finite number of critical points. A class of counterexamples is then presented that indicate that the inverse function theorem cannot be used to provide a direct solution to this problem. Finally, while the general problem is left unsolved, a proof is obtained in each of two special cases not previously seen in the literature.
