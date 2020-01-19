@@ -5,6 +5,7 @@ permalink: /code/
 ---
 
 Here are some projects I've worked on in my spare time.
+For more, see my [github account](https://github.com/bencwallace/).
 
 ## [Probly](https://github.com/bencwallace/probly)
 
@@ -22,18 +23,7 @@ A Scala port of jlox, the Java implementation of a tree-walk interpreter for the
 
 A simple application of web scraping for testing statistical uniformity of randomized search results.
 
-## [colortab](https://github.com/bencwallace/colortab)
-
-A Chrome extension that changes the new tab page to a blank page with a background color of your choice.
-
-## [thiscv](https://github.com/bencwallace/thiscv)
-
-A CV template written in Handlebars.js.
-
 ## [saw](https://github.com/bencwallace/saw)
 
-An introduction to Markov chains and MCMC (including the Metropolis-Hastings algorithm), the self-avoiding walk (weak and strict), and the pivot algorithm.
+A demontration of the pivot and Metropolis-Hastings algorithms.
 
-## [toh](https://github.com/bencwallace/toh)
-
-An implementation of the Tower of Hanoi puzzle for the nand2tetris Hack platform.

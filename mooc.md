@@ -21,6 +21,10 @@ Develops the software hierarchy, from the simple construction
 of an assembler, to the development of a virtual machine and a compiler, and finally the implementation of a basic
 operating system.
 
+The course ends with an open-ended project: write a program or library that can be compiled with your compiler and
+run on the architecture you've built. I wrote an [implementation]((https://github.com/bencwallace/toh)) of the [Tower
+of Hanoi](https://en.wikipedia.org/wiki/Tower_of_Hanoi) puzzle.
+
 ## Algorithms
 
 An excellent introduction to algorithms and data structures.
