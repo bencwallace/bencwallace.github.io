@@ -1,7 +1,7 @@
 ---
 layout: default
-title: learn
-permalink: /learn/
+title: mooc
+permalink: /mooc/
 ---
 
 These are some online courses I've enjoyed.
