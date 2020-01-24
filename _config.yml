@@ -21,6 +21,7 @@ url: "https://bcwallace.com" # the base hostname & protocol for your site, e.g. 
 github_username:  bencwallace
 linkedin_username:  bencwallace
 github: [metadata]
+google_analytics: true
 
 # Build settings
 markdown: kramdown
