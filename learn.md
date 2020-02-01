@@ -22,8 +22,11 @@ of an assembler, to the development of a virtual machine and a compiler, and fin
 operating system.
 
 The course ends with an open-ended project: write a program or library that can be compiled with your compiler and
-run on the architecture you've built. I wrote an [implementation]((https://github.com/bencwallace/toh)) of the [Tower
-of Hanoi](https://en.wikipedia.org/wiki/Tower_of_Hanoi) puzzle.
+run on the architecture you've built. I wrote an [implementation](https://github.com/bencwallace/toh) of the [Tower
+of Hanoi](https://en.wikipedia.org/wiki/Tower_of_Hanoi) puzzle. Below is a screenshot of the game in action, running
+on the Hack platform simulator.
+
+[![](https://raw.githubusercontent.com/bencwallace/toh/master/images/toh2.png){:class="img-responsive"}](https://raw.githubusercontent.com/bencwallace/toh/master/images/toh2.png)
 
 ## Algorithms
 
@@ -37,6 +40,11 @@ Discusses the fundamentals, such as stacks and queues, merge sort and quick sort
 
 Deals with graph algorithms, such as breadth- and depth-first search and Dijkstra's algorithm, as well as
 string processing algorithms, such as the famous grep algorithm.
+
+One of my [favourite assignments](https://coursera.cs.princeton.edu/algs4/assignments/seam/specification.php) involved the implementation of a [seam carving](https://en.wikipedia.org/wiki/Seam_carving) algorithm for smart image resizing. The video
+below is an excellent explanation of this algorithm.
+
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/6NcIJXTlugc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## Programming Languages
 
@@ -65,6 +73,10 @@ A great overview of the field: from linear and logistic regression to neural net
 A 5-course sequence on deep neural networks. The 5 courses discuss, respectively: feedforward neural networks, training techniques, structuring deep learning projects, convolutional neural networks, and recurrent neural networks.
 
 [Deep Learning](https://www.coursera.org/specializations/deep-learning)
+
+The final assignment involved an implementation of [neural style transfer](https://en.wikipedia.org/wiki/Neural_Style_Transfer) using a convolution neural network. The image below, of the Louvre in style of Monet, was generated using this network.
+
+![](/assets/nst.jpg){:class="img-responsive"}]
 
 ## Functional Programming in Scala
 
