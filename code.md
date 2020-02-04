@@ -13,7 +13,9 @@ A Python framework for working with random variables.
 
 ## [Polymers.jl](https://github.com/bencwallace/Polymers.jl)
 
-A Julia implementation of the pivot algorithm: a Markov chain Monte carlo (MCMC) sampler for the self-avoiding walk (SAW) model of a linear polymer chain.
+A Julia implementation of the pivot algorithm: a Markov chain Monte carlo (MCMC) sampler for the self-avoiding walk (SAW) model of a linear polymer chain. I used Plotly to visualize the results of these simulations with interactive plots like the one below.
+
+<iframe width="400" height="400" frameborder="0" scrolling="no" src="//plot.ly/~bencwallace/16.embed"></iframe>
 
 ## [slox](https://github.com/bencwallace/slox)
 
