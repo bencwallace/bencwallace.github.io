@@ -4,7 +4,7 @@ title: learn
 permalink: /learn/
 ---
 
-These are some online courses I've enjoyed.
+I'm a fan of self-education and in particular of [MOOCs](https://en.wikipedia.org/wiki/Massive_open_online_course). I think that, especially when it comes to computer science and related topics, where it's possible to develop rather detailed and informative automated assessments, MOOCs have a huge potential as introductory resources. Here are some examples that I've thoroughly enjoyed.
 
 ## From Nand to Tetris
 
