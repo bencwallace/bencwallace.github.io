@@ -12,14 +12,13 @@ A 2-part "learn by doing" course that guides you through the construction of a c
 
 ### [Part I](https://www.coursera.org/learn/build-a-computer)
 
-Covers the implementation of a simple von Neumann architecture starting with elementary logic gates and
-introduces machine code and assembly programming.
+This course begins with a discussion of elementary logic gates and guides you through the process of building an ALU, CPU, and RAM and the von Neumann architecture that connects these components together. Before taking this course, electronics may as well have been magic for me (and to [some extent](https://en.wikipedia.org/wiki/Semiconductor), it still is). If you feel the same way, this course will be incredibly eye-opening.
 
 ### [Part II](https://www.coursera.org/learn/nand2tetris2)
 
 Develops the software hierarchy, from the simple construction
 of an assembler, to the development of a virtual machine and a compiler, and finally the implementation of a basic
-operating system.
+operating system. Due to the breadth of this course, only the bare essentials of each are covered, leading to more of a big-picture understanding of how computers work. If you've ever wondered "where" the stack and heap are located, you'll especially enjoy the section on [virtualization](https://en.wikipedia.org/wiki/Virtualization).
 
 The course ends with an open-ended project: write a program or library that can be compiled with your compiler and
 run on the architecture you've built. I wrote an [implementation](https://github.com/bencwallace/toh) of the [Tower
@@ -30,9 +29,9 @@ on the Hack platform simulator.
 
 ## Algorithms
 
-An excellent introduction to algorithms and data structures.
+An excellent introduction to algorithms and data structures. This course has one of the best automated graders I've had to fight with. It checks not only correctness, but also style and time and space complexity.
 
-[Parti I](https://www.coursera.org/learn/algorithms-part1) 
+[Part I](https://www.coursera.org/learn/algorithms-part1) 
 
 Discusses the fundamentals, such as stacks and queues, merge sort and quick sort, search trees, and hash tables.
 
@@ -48,11 +47,11 @@ below is an excellent explanation of this algorithm.
 
 ## Programming Languages
 
-A 3-part introduction to the theory of programming languages.
+A 3-part introduction to the theory of programming languages. I find this course not only made me a better programmer, but also allowed me to better compare programming languages and understand programming language concepts, including (but not limited to): referential transparency, syntax and semantics, compile time vs. runtime, macros, and dynamic dispatch.
 
 ### [Part A](https://www.coursera.org/learn/programming-languages)
 
-Introduces functional programming with static types through Standard ML;
+Introduces functional programming with static types through Standard ML.
 
 ### [Part B](https://www.coursera.org/learn/programming-languages-part-b)
 
@@ -76,7 +75,7 @@ A 5-course sequence on deep neural networks. The 5 courses discuss, respectively
 
 The final assignment involved an implementation of [neural style transfer](https://en.wikipedia.org/wiki/Neural_Style_Transfer) using a convolution neural network. The image below, of the Louvre in style of Monet, was generated using this network.
 
-![](/assets/nst.jpg){:class="img-responsive"}]
+![](/assets/nst.jpg){:class="img-responsive"}
 
 ## Functional Programming in Scala
 
