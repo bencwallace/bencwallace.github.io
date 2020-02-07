@@ -45,6 +45,8 @@ The central concern of this thesis is the study of critical behaviour in models 
 
 [UBC](https://open.library.ubc.ca/cIRcle/collections/ubctheses/24/items/1.0348692)
 
+![](/assets/theta_curve.png){:class="img-responsive"}
+
 ### On the Critical Points of Gaussian Mixtures
 
 #### Queen's University (2013)
@@ -52,3 +54,5 @@ The central concern of this thesis is the study of critical behaviour in models 
 This thesis is concerned with studying the question whether or not Gaussian mixtures have finitely many critical points. The relevance of this problem to the convergence of the mean-shift algorithm is discussed and an overview of some basic properties of the critical points of Gaussian mixtures is provided. Some previous results that are then reviewed include a reduction of this problem to the homoscedastic case and the construction of a very simple mixture with a large but finite number of critical points. A class of counterexamples is then presented that indicate that the inverse function theorem cannot be used to provide a direct solution to this problem. Finally, while the general problem is left unsolved, a proof is obtained in each of two special cases not previously seen in the literature.
 
 [PDF](https://mast.queensu.ca/~communications/Papers/Wallace_Benjamin_201307_MSc.pdf)
+
+![](/assets/gaussian-mixture-contours.png){:class="img-responsive"}
