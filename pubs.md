@@ -45,7 +45,7 @@ The central concern of this thesis is the study of critical behaviour in models 
 
 [UBC](https://open.library.ubc.ca/cIRcle/collections/ubctheses/24/items/1.0348692)
 
-![](/assets/theta_curve.png){:class="img-responsive"}
+[![](/assets/theta_curve.png){:class="img-responsive"}](https://open.library.ubc.ca/cIRcle/collections/ubctheses/24/items/1.0348692)
 
 ### On the Critical Points of Gaussian Mixtures
 
@@ -55,4 +55,4 @@ This thesis is concerned with studying the question whether or not Gaussian mixt
 
 [PDF](https://mast.queensu.ca/~communications/Papers/Wallace_Benjamin_201307_MSc.pdf)
 
-![](/assets/gaussian-mixture-contours.png){:class="img-responsive"}
+[![](/assets/gaussian-mixture-contours.png){:class="img-responsive"}](https://mast.queensu.ca/~communications/Papers/Wallace_Benjamin_201307_MSc.pdf)
