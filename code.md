@@ -9,7 +9,7 @@ For more, see my [github account](https://github.com/bencwallace/).
 
 ## [doc2date](https://github.com/bencwallace/doc2date)
 
-An analysis of document dating techniques using a variety of text representations and statistical models.
+An analysis of document dating using a variety of text representations and statistical models.
 A case study in document regression.
 
 ## [Probly](https://github.com/bencwallace/probly)
