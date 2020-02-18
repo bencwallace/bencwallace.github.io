@@ -7,6 +7,11 @@ permalink: /code/
 Here are some projects I've worked on in my spare time.
 For more, see my [github account](https://github.com/bencwallace/).
 
+## [doc2date](https://github.com/bencwallace/doc2date)
+
+An analysis of document dating techniques using a variety of text representations and statistical models.
+A case study in document regression.
+
 ## [Probly](https://github.com/bencwallace/probly)
 
 A Python framework for working with random variables.
