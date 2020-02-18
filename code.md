@@ -12,6 +12,8 @@ For more, see my [github account](https://github.com/bencwallace/).
 An analysis of document dating using a variety of text representations and statistical models.
 A case study in document regression.
 
+[![](assets/tsne.png){:class="img-responsive"}](https://github.com/bencwallace/doc2date)
+
 ## [Probly](https://github.com/bencwallace/probly)
 
 A Python framework for working with random variables.
