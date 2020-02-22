@@ -7,12 +7,13 @@ permalink: /code/
 Here are some projects I've worked on in my spare time.
 For more, see my [github account](https://github.com/bencwallace/).
 
-## [doc2date](https://github.com/bencwallace/doc2date)
+## [doc2date](https://github.com/bencwallace/doc2date/blob/master/doc2date.ipynb)
 
 An analysis of document dating using a variety of text representations and statistical models.
 A case study in document regression.
 
-[![](assets/tsne.png){:class="img-responsive"}](https://github.com/bencwallace/doc2date)
+<!-- [![](/assets/zipf.png){:class="img-responsive"}](https://github.com/bencwallace/doc2date/blob/master/doc2date.ipynb) -->
+[![](/assets/quotes.png){:class="img-responsive"}](https://github.com/bencwallace/doc2date/blob/master/doc2date.ipynb)
 
 ## [Probly](https://github.com/bencwallace/probly)
 
@@ -28,11 +29,10 @@ A Julia implementation of the pivot algorithm: a Markov chain Monte carlo (MCMC)
 
 A Scala port of jlox, the Java implementation of a tree-walk interpreter for the Lox language, from Crafting Interpreters by Bob Nystrom.
 
-## [ottiaq](https://github.com/bencwallace/ottiaq)
+## [ottiaq](https://github.com/bencwallace/ottiaq/blob/master/ottiaq.ipynb)
 
 A simple application of web scraping for testing statistical uniformity of randomized search results.
 
-## [saw](https://github.com/bencwallace/saw)
+## [saw](https://github.com/bencwallace/saw/blob/master/saw-simulation.ipynb)
 
 A demontration of the pivot and Metropolis-Hastings algorithms.
-
