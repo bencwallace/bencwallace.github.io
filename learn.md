@@ -4,7 +4,7 @@ title: learn
 permalink: /learn/
 ---
 
-I'm a fan of self-education and in particular of [MOOCs](https://en.wikipedia.org/wiki/Massive_open_online_course), which I think have massive potential value, especially when it comes to topics like computer science, where it's possible to develop rather thorough and informative automated assessments. Here are some example of particularly well-designed MOOCs that I've enjoyed.
+I'm a fan of self-education and in particular of [MOOCs](https://en.wikipedia.org/wiki/Massive_open_online_course), which I think have massive potential value, especially when it comes to topics like computer science, where it's possible to develop rather thorough and informative automated assessments. Below are some example of particularly well-designed MOOCs that I've enjoyed. Next, I'd like to learn more about [operating systems](https://www.ops-class.org/), particularly about the implementation of concurrency primitives.
 
 ## From Nand to Tetris
 

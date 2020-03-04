@@ -7,8 +7,10 @@ layout: home
 
 **Hi, I'm Ben Wallace!**
 
-I'm a developer at [FLXFlight](https://www.flxflight.com/) in Vienna. These days, I'm really interested in scientific applications of computing, especially machine learning and data science, probabilistic programming, and computational statistics. I'm particularly interested in applications to these areas of tools and insights from more traditional areas of computing, such as functional programming, parallel programming, and concurrency.
+These days, I'm really interested in scientific applications of computing, especially data science and machine learning. My latest project, [doc2date]({% link doc2date.md %}), combines classical regression methods with natural language processing. Some of my other projects can be found [on this site]({% link code.md %}).
 
-My background is in mathematics, specifically probability theory. I worked as a postdoctoral researcher at [IST Austria](https://ist.ac.at/en/home/), under [Laszlo Erdös](https://ist.ac.at/en/research/math-comp-sciences/erdoes-group/) and wrote my thesis at the [University of British Columbia](https://www.ubc.ca/) under [Gordon Slade](https://www.math.ubc.ca/~slade/). My research involved studying models from statistical physics.
+My background is in mathematics, specifically probability theory. I worked as a postdoctoral researcher at IST Austria, under [Laszlo Erdös](https://ist.ac.at/en/research/math-comp-sciences/erdoes-group/) and wrote my thesis at the University of British Columbia under [Gordon Slade](https://www.math.ubc.ca/~slade/). My research involved studying models from statistical physics and you can find my papers [here]({% link pubs.md %}).
 
-[![](/assets/plot2d_bridge.png){:class="img-responsive"}](https://plot.ly/~bencwallace/14/)
+*The image below is a visual representation of my combined interests in mathematics and computing: A simulation I produced of a linear polymer chain. Click on it to learn more.*
+
+[![](/assets/plot2d_bridge.png){:class="img-responsive"}](https://github.com/bencwallace/polymers.jl)
