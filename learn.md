@@ -4,7 +4,7 @@ title: learn
 permalink: /learn/
 ---
 
-I'm a fan of self-education and in particular of [MOOCs](https://en.wikipedia.org/wiki/Massive_open_online_course), which I think have massive potential value, especially when it comes to topics like computer science, where it's possible to develop rather thorough and informative automated assessments. Below are some example of particularly well-designed MOOCs that I've enjoyed. Next, I'd like to learn more about [operating systems](https://www.ops-class.org/), particularly about the implementation of concurrency primitives.
+I'm a fan of self-education and, in particular, of [MOOCs](https://en.wikipedia.org/wiki/Massive_open_online_course), which I think have incredible potential. MOOCs are especially well-suited to topics like computer science, where it's possible to develop rather thorough and informative automated assessments. Below are some example of some well-designed MOOCs that I've enjoyed.
 
 ## From Nand to Tetris
 
@@ -68,7 +68,7 @@ A great overview of the field: from linear and logistic regression to neural net
 
 A 5-course sequence on deep neural networks. The 5 courses discuss, respectively: feedforward neural networks, training techniques, structuring deep learning projects, convolutional neural networks, and recurrent neural networks.
 
-The final assignment involved an implementation of [neural style transfer](https://en.wikipedia.org/wiki/Neural_Style_Transfer) using a convolution neural network. The image below, of the Louvre in style of Monet, was generated using this network.
+One assignment involved the implementation of [neural style transfer](https://en.wikipedia.org/wiki/Neural_Style_Transfer) using a convolutional neural network. The image below, of the Louvre in the style of Monet, was generated using this network.
 
 ![](/assets/nst.jpg){:class="img-responsive"}
 
