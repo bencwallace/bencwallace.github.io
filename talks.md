@@ -6,7 +6,7 @@ permalink: /talks/
 
 ## teaching
 
-### Statistical physics – IST Austria (2018)
+### [Statistical physics – IST Austria (2018)](/assets/statistical-physics.pdf)
 
 ### Differential calculus – University of British Columbia (2016)
 
