@@ -4,8 +4,11 @@ title: code
 permalink: /code/
 ---
 
-Here are some projects I've worked on in my spare time.
-For more, see my [github account](https://github.com/bencwallace/).
+<img style="float: right;" src="../assets/icon128.png">
+
+## [ClearText](https://github.com/bencwallace/cleartext)
+
+The smart reading assistant for English language learners
 
 ## [doc2date](https://github.com/bencwallace/doc2date/blob/master/doc2date.ipynb)
 
