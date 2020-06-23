@@ -5,7 +5,7 @@ permalink: /cleartext/
 
 <img style="float: right;" src="../assets/icon128.png">
 
-## ClearText
+# ClearText
 
 The smart reading assistant for English language learners.
 
@@ -14,7 +14,7 @@ The smart reading assistant for English language learners.
 ClearText is a Google Chrome extension that makes it easy to *simplify* English language text found on any web page.
 Just select a sentence you want to simplify and click on the ClearText extension icon to display the simplified text.
 
-### Installation
+## Installation
 
 ClearText is currently pending review for inclusion in the Chrome Web Store.
 In the meantime, ClearText can be installed as an *unpacked extension* by following these instructions.
@@ -27,13 +27,13 @@ In the meantime, ClearText can be installed as an *unpacked extension* by follow
 6. The ClearText extension should now be visible in the *Extensions* page. If it is not already activate, toggle it on.
 7. The ClearText extension icon should now be visible in the extension toolbar.
 
-### Usage
+## Usage
 
 1. Navigate to a page where you would like to simplify some text.
 2. Select some text. Note that ClearText is optimized to work on single sentence selections.
 3. Click on the ClearText extension icon in the Chrome extensions toolbar at the top-right hand side of your browser window.
 
-### Learn More
+## Learn more
 
 Visit the [ClearText repository](https://github.com/bencwallace/cleartext) on GitHub.
 
