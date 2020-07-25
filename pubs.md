@@ -6,8 +6,6 @@ permalink: /pubs/
 
 ## publications
 
-A broad (albeit somewhat technical) overview of my research can be found in my [research statement]({{site.url}}/assets/research.pdf).
-
 ### Critical two-point function for long-range $$O(n)$$ models below the upper critical dimension
 
 #### M. Lohmann, G. Slade, B. C. Wallace, Journal of Statistical Physics, 169:1132-1161 (2017)
