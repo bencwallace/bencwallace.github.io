@@ -4,11 +4,11 @@ title: code
 permalink: /code/
 ---
 
-<img style="float: right;" src="../assets/icon128.png">
-
-## [ClearText](https://github.com/bencwallace/cleartext)
+## [ClearText](../cleartext)
 
 The smart reading assistant for English language learners
+
+[![](/assets/icon128.png){:class="img-responsive"}](../cleartext)
 
 ## [doc2date](https://github.com/bencwallace/doc2date/blob/master/doc2date.ipynb)
 
@@ -31,10 +31,6 @@ A Julia implementation of the pivot algorithm: a Markov chain Monte carlo (MCMC)
 ## [slox](https://github.com/bencwallace/slox)
 
 A Scala port of jlox, the Java implementation of a tree-walk interpreter for the Lox language, from Crafting Interpreters by Bob Nystrom.
-
-## [ottiaq](https://github.com/bencwallace/ottiaq/blob/master/ottiaq.ipynb)
-
-A simple application of web scraping for testing statistical uniformity of randomized search results.
 
 ## [saw](https://github.com/bencwallace/saw/blob/master/saw-simulation.ipynb)
 
