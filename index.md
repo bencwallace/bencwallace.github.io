@@ -10,5 +10,3 @@ While at Insight I developed [ClearText](cleartext), a project to help English l
 My academic research focused on probability theory. I worked as a postdoctoral researcher at IST Austria after completing my PhD in mathematics at the University of British Columbia. You can find my publications and theses [here](pubs) and slides from some of my talks [here]({% link talks.md %}).
 
 Some of my early steps towards machine learning and software engineering involved online courses. [Here](moocs) are some courses I'd recommend. I also recently started a [blog]({% link blog.md %}) to keep track of and share some of the things I've learned.
-
-[![](/assets/plot2d_bridge.png){:class="img-responsive"}](https://github.com/bencwallace/polymers.jl)
