@@ -1,10 +1,10 @@
 ---
 layout: default
-title: moocs
+<!-- title: moocs -->
 permalink: /moocs/
 ---
 
-I'm a fan of self-education and, in particular, of [MOOCs](https://en.wikipedia.org/wiki/Massive_open_online_course), which I think have incredible potential. MOOCs are especially well-suited to topics like computer science, where it's possible to develop rather thorough and informative automated assessments. Below are some example of some well-designed MOOCs that I've enjoyed.
+I think [MOOCs](https://en.wikipedia.org/wiki/Massive_open_online_course) have incredible potential. Below are some example of some well-designed MOOCs that I've enjoyed.
 
 ## From Nand to Tetris
 
