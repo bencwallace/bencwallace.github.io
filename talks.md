@@ -1,10 +1,10 @@
 ---
 layout: default
-title: talks
+<!-- title: talks -->
 permalink: /talks/
 ---
 
-## teaching
+<!-- ## teaching -->
 
 ### [Statistical physics – IST Austria (2018)](/assets/statistical-physics.pdf)
 

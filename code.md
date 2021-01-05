@@ -1,10 +1,10 @@
 ---
 layout: default
-title: code
+<!-- title: code -->
 permalink: /code/
 ---
 
-## [ClearText](../cleartext)
+<!-- ## [ClearText](../cleartext) -->
 
 The smart reading assistant for English language learners
 

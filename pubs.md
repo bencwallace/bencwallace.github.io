@@ -1,10 +1,10 @@
 ---
 layout: default
-title: pubs
+<!-- title: pubs -->
 permalink: /pubs/
 ---
 
-## publications
+<!-- ## publications -->
 
 ### Critical two-point function for long-range $$O(n)$$ models below the upper critical dimension
 
