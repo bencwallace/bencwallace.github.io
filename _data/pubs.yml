@@ -1,0 +1,28 @@
+- title: Critical two-point function for long-range $$O(n)$$ models below the upper critical dimension
+  coauthors:
+    - M. Lohmann
+    - G. Slade
+  links:
+    - name: arXiv
+      dest: https://arxiv.org/abs/1705.08540
+    - name: JSP
+      dest: https://link.springer.com/article/10.1007/s10955-017-1904-x
+- title: Four-dimensional weakly self-avoiding walk with contact self-attraction
+  coauthors:
+    - R. Bauerschmidt
+    - G. Slade
+  links:
+    - name: arXiv
+      dest: https://arxiv.org/abs/1610.08573
+    - name: JSP
+      dest: https://link.springer.com/article/10.1007/s10955-017-1754-6
+- title: Finite-order correlation length for 4-dimensional weakly self-avoiding walk and $$\mid\varphi\mid^4$$ spins
+  coauthors:
+    - R. Bauerschmidt
+    - G. Slade
+    - A. Tomberg
+  links:
+    - name: arXiv
+      dest: https://arxiv.org/abs/1511.02790
+    - name: AHP
+      dest: https://link.springer.com/article/10.1007/s00023-016-0499-0

@@ -1,0 +1,15 @@
+- name: Probly
+  github: probly
+  summary: A simple pure Python library for working with random variables.
+- name: ClearText
+  github: cleartext
+  summary: A smart reading assistant for English language learners. Completed during my time as an [Insight Fellow](https://insightfellows.com/).
+- name: doc2date
+  github: doc2date
+  summary: A case study in document regression.
+- name: slox
+  github: slox
+  summary: A Scala port of the jlox tree-walk interpreter from [Crafting Interpreters](https://www.craftinginterpreters.com/).
+- name: Polymers.jl
+  github: polymers.jl
+  summary: A Julia implementation of the pivot algorithm for simulating linear polymer chains.
