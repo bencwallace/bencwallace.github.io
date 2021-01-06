@@ -8,4 +8,4 @@ WORKDIR /workspace
 COPY . .
 RUN bundle install
 
-CMD ["bundle", "exec", "jekyll", "serve", "-H", "0.0.0.0"]
+CMD ["bundle", "exec", "jekyll", "serve", "-H", "0.0.0.0", "--livereload"]
