@@ -261,6 +261,7 @@ PLATFORMS
 DEPENDENCIES
   github-pages (~> 209)
   jekyll-feed (~> 0.15.1)
+  jekyll-redirect-from
   tzinfo-data
 
 BUNDLED WITH

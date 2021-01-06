@@ -22,12 +22,16 @@ github_username:  bencwallace
 linkedin_username:  bencwallace
 github: [metadata]
 google_analytics: true
+safe: true
 
 # Build settings
 markdown: kramdown
 theme: minima
 plugins:
   - jekyll-feed
+  - jekyll-redirect-from
+whitelist:
+  - jekyll-redirect-from
 github:
   - owner_url: https://github.com/bencwallace
 show_downloads: false
