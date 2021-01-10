@@ -1,7 +1,5 @@
 ---
-layout: default
+redirect_to: https://hopefullynotwrong.wordpress.com/
+permalink: /blog
 title: blog
-permalink: /blog/
 ---
-
-<script>window.location="https://hopefullynotwrong.wordpress.com/"</script>
