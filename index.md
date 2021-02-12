@@ -2,7 +2,7 @@
 layout: home
 ---
 
-My name is Ben Wallace. I'm a Machine Learning Engineer at [iRobot](https://www.irobot.com/). Before that, I did research in math (probability / statistical physics) at [IST Austria](https://ist.ac.at/en/) and [UBC](http://www.math.ubc.ca/). Below are the results of some of my personal and professional projects.
+I'm a Machine Learning Engineer at [iRobot](https://www.irobot.com/). Before that, I did mathematical research at [IST Austria](https://ist.ac.at/en/) and [UBC](http://www.math.ubc.ca/).
 
 ***
 
