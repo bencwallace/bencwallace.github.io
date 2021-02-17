@@ -2,7 +2,7 @@
 layout: home
 ---
 
-I'm a Machine Learning Engineer at [iRobot](https://www.irobot.com/). Before that, I did mathematical research at [IST Austria](https://ist.ac.at/en/) and [UBC](http://www.math.ubc.ca/).
+I'm a Machine Learning Engineer at [iRobot](https://www.irobot.com/). Previously, I was a postdoctoral researcher at [IST Austria](https://ist.ac.at/en/) and a PhD student at [UBC](http://www.math.ubc.ca/).
 
 ***
 
