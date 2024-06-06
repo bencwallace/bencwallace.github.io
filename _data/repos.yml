@@ -1,9 +1,12 @@
 - name: slox
   github: slox
   summary: A Scala port of the jlox tree-walk interpreter from [Crafting Interpreters](https://www.craftinginterpreters.com/).
+- name: pivot
+  github: pivot
+  summary: A fast C++ implementation of [Clisby's](https://clisby.net/) tree-based pivot algorithm for sampling the self-avoiding walk.
 - name: Polymers.jl
   github: polymers.jl
-  summary: A Julia implementation of the pivot algorithm for simulating linear polymer chains.
+  summary: A Julia implementation of the (naive) pivot algorithm for simulating and visualizing linear polymer chains.
 - name: Probly
   github: probly
   summary: A simple Python library for working with random variables.
