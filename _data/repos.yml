@@ -1,9 +1,9 @@
-- name: slox
-  github: slox
-  summary: A Scala port of the jlox tree-walk interpreter from [Crafting Interpreters](https://www.craftinginterpreters.com/).
 - name: pivot
   github: pivot
   summary: A fast C++ implementation of [Clisby's](https://clisby.net/) tree-based pivot algorithm for sampling the self-avoiding walk.
+- name: slox
+  github: slox
+  summary: A Scala port of the jlox tree-walk interpreter from [Crafting Interpreters](https://www.craftinginterpreters.com/).
 - name: unet.cpp
   github: unet.cpp
   summary:  Simple U-Net implementation from scratch in C++
