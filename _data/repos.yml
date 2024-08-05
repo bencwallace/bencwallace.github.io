@@ -4,9 +4,9 @@
 - name: pivot
   github: pivot
   summary: A fast C++ implementation of [Clisby's](https://clisby.net/) tree-based pivot algorithm for sampling the self-avoiding walk.
-- name: Polymers.jl
-  github: polymers.jl
-  summary: A Julia implementation of the (naive) pivot algorithm for simulating and visualizing linear polymer chains.
+- name: unet.cpp
+  github: unet.cpp
+  summary:  Simple U-Net implementation from scratch in C++
 - name: Probly
   github: probly
   summary: A simple Python library for working with random variables.
@@ -16,12 +16,15 @@
 - name: ClearText
   github: cleartext
   summary: A smart reading assistant for English language learners. Completed during my time as an [Insight Fellow](https://insightfellows.com/).
-- name: simplify
-  github: simplify
-  summary: A tool to simplify Python ASTs given runtime constraints. A work in progress.
+- name: Polymers.jl
+  github: polymers.jl
+  summary: A Julia implementation of the (naive) pivot algorithm for simulating and visualizing linear polymer chains.
 - name: ml_runner
   github: ml_runner
   summary: A configurable template for an ML training pipeline.
 - name: toh
   github: toh
   summary: A simple implementation of the Tower of Hanoi puzzle on the nand2tetris Hack platform.
+- name: simplify
+  github: simplify
+  summary: A tool to simplify Python ASTs given runtime constraints. A work in progress.
