@@ -4,27 +4,27 @@
 - name: slox
   github: slox
   summary: A Scala port of the jlox tree-walk interpreter from [Crafting Interpreters](https://www.craftinginterpreters.com/).
-- name: unet.cpp
-  github: unet.cpp
-  summary:  Simple U-Net implementation from scratch in C++
+# - name: unet.cpp
+#   github: unet.cpp
+#   summary:  Simple U-Net implementation from scratch in C++
 - name: Probly
   github: probly
   summary: A simple Python library for working with random variables.
-- name: gradstudent
-  github: gradstudent
-  summary: A simple C++ tensor manipulation library. A learning project.
-- name: ClearText
-  github: cleartext
-  summary: A smart reading assistant for English language learners. Completed during my time as an [Insight Fellow](https://insightfellows.com/).
-- name: Polymers.jl
-  github: polymers.jl
-  summary: A Julia implementation of the (naive) pivot algorithm for simulating and visualizing linear polymer chains.
-- name: ml_runner
-  github: ml_runner
-  summary: A configurable template for an ML training pipeline.
-- name: toh
-  github: toh
-  summary: A simple implementation of the Tower of Hanoi puzzle on the nand2tetris Hack platform.
-- name: simplify
-  github: simplify
-  summary: A tool to simplify Python ASTs given runtime constraints. A work in progress.
+# - name: gradstudent
+#   github: gradstudent
+#   summary: A simple C++ tensor manipulation library. A learning project.
+# - name: ClearText
+#   github: cleartext
+#   summary: A smart reading assistant for English language learners. Completed during my time as an [Insight Fellow](https://insightfellows.com/).
+# - name: Polymers.jl
+#   github: polymers.jl
+#   summary: A Julia implementation of the (naive) pivot algorithm for simulating and visualizing linear polymer chains.
+# - name: ml_runner
+#   github: ml_runner
+#   summary: A configurable template for an ML training pipeline.
+# - name: toh
+#   github: toh
+#   summary: A simple implementation of the Tower of Hanoi puzzle on the nand2tetris Hack platform.
+# - name: simplify
+#   github: simplify
+#   summary: A tool to simplify Python ASTs given runtime constraints. A work in progress.
