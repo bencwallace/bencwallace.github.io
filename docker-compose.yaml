@@ -5,3 +5,5 @@ services:
       - "4000:4000"
     volumes:
       - ".:/workspace"
+    working_dir: /workspace
+    command: ["bundle", "exec", "jekyll", "serve", "-s", "docs/", "-H", "0.0.0.0", "--livereload"]
