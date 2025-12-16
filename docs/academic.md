@@ -1,9 +1,9 @@
-Before getting into machine learning, I did research on probability theory and statistical physics.
-Below are some of my publications.
+Before moving into machine learning, I did research on probability theory and statistical physics.
+My work can be found below.
 
 ***
 
-## pubs
+## publications
 
 {% for pub in site.data.pubs %}
 **{{ pub.title }}**  
