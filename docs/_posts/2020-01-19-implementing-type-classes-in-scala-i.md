@@ -1,5 +1,5 @@
 ---
-title: "Implementing typeclasses in Scala I"
+title: "Implementing typeclasses in Scala, Part I: Implicits and ad hoc polymorphism"
 date: 2020-01-19
 categories: 
   - "programming"

@@ -1,5 +1,5 @@
 ---
-title: "Implementing typeclasses in Scala II"
+title: "Implementing typeclasses in Scala, Part II: Functors and monads"
 date: 2020-01-19
 tags: 
   - "functors"
