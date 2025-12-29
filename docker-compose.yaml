@@ -6,4 +6,4 @@ services:
     volumes:
       - ".:/workspace"
     working_dir: /workspace
-    command: ["bundle", "exec", "jekyll", "serve", "-s", "docs/", "-H", "0.0.0.0", "--livereload"]
+    command: ["bundle", "exec", "jekyll", "serve", "-s", "docs/", "-H", "0.0.0.0", "--livereload", "--drafts"]
